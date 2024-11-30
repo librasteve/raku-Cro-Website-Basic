@@ -1,0 +1,6 @@
+use Test;
+use Cro::Website::Basic;
+
+pass "replace me";
+
+done-testing;

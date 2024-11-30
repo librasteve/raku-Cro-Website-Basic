@@ -1,0 +1,24 @@
+{
+    "name": "Cro::Website::Basic",
+    "description": "blah blah blah",
+    "version": "0.0.1",
+    "raku": "6.d",
+    "authors": [
+        "librasteve"
+    ],
+    "auth": "zef:librasteve",
+    "depends": [
+        "cro",
+        "Cro::WebApp",
+        "JSON::Fast",
+        "Cro::HTTP::Router",
+        "Cro::HTTP::Log::File"
+    ],
+    "build-depends": [],
+    "provides": {
+        "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",
+        "Cro::Website::Basic::Routes::Merry-Cromas": "lib/Cro-Website-Basic/Routes/Merry-Cromas.rakumod"
+    },
+    "license": "Artistic-2.0",
+    "source-url": ""
+}
