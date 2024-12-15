@@ -26,6 +26,9 @@ export WEBSITE_HOST="0.0.0.0" && export WEBSITE_PORT="20000"
 - $topic var to handle multiple component instances
 - make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
+- hamburger menu
+- light dark better
+- language switcher
 
 # Local
 
