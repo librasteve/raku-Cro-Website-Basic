@@ -4,6 +4,25 @@
 
 simple website written in Cro::WebApp
 
+---
+
+# Branches
+
+#### 01-cro-htmx-pico-sass
+
+Merry Xmas site with pico root overloaded for scale
+Dark / light implemented via site reload
+
+#### 02-wip
+
+add Cromponent (pre macro)
+HTML only - low integration SASS
+
+
+export WEBSITE_HOST="0.0.0.0" && export WEBSITE_PORT="20000"
+
+
+
 # Local
 
 ## GETTING STARTED
@@ -19,7 +38,8 @@ Install raku - eg. from [rakubrew](https://rakubrew.org), then:
 - `cd raku-Cro-Website-Basic` && `zef install .`
 
 ### Run and view it
-- `cro run`
+- `export WEBSITE_HOST="0.0.0.0" && export WEBSITE_PORT="20000"`
+- `raku -Ilib service.raku`
 - Open a browser and go to `http://localhost:20000`
 
 You will note that cro has many other options as documented at [Cro](https://cro.raku.org) if you want to deploy to a production server.

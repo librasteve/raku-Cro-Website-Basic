@@ -35,5 +35,8 @@ sub routes() is export {
 
         use Cro::Website::Basic::Routes::Merry-Cromas;
         include merry_cromas => merry_cromas-routes;
+
+        use Cro::Website::Basic::Routes::Happy-TM-Xmas;
+        include happy_tm_xmas => happy_tm_xmas-routes;
     }
 }
