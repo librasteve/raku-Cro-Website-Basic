@@ -22,6 +22,10 @@ HTML only - low integration SASS
 export WEBSITE_HOST="0.0.0.0" && export WEBSITE_PORT="20000"
 
 
+# TODOs
+- $topic var to handle multiple component instances
+- make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
+- do the full pico table example
 
 # Local
 

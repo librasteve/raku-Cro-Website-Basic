@@ -4,7 +4,7 @@ my @manifest = <MyTable Row Cell Grid Item>;
 
 class Cell is export {
 	has $.data is required;
-	
+
 	multi method new($data) {
 		$.new: :$data
 	}
@@ -18,7 +18,7 @@ class Cell is export {
 
 class Row is export {
 	has Cell() @.cells is required;
-	
+
 	multi method new(@cells) {
 		$.new: :@cells
 	}
@@ -59,29 +59,14 @@ class Item is export {
 		$.new: :$data
 	}
 
-	method style {
-		q:to/END/
-		<style>
-			.grid-item {
-				background-color: #4CAF50;
-				color: white;
-				#border: 1px solid #ddd;
-				#padding: 20px;
-				text-align: center;
-				font-size: 16px;
-			}
-		</style>
-		END
-	}
-
 	method RENDER {
-		$.style ~
 		q:to/END/
-			<div class="grid-item"><.data></div>
+			<div><.data></div>
 		END
 	}
 }
 
+#| https://picocss.com/docs/grid
 class Grid is export {
 	has Item() @.items is required;
 
@@ -89,24 +74,26 @@ class Grid is export {
 		$.new: :@items
 	}
 
+	#| example of optional grid style from
+	#| https://cssgrid-generator.netlify.app/
 	method style {
 		q:to/END/
 		<style>
-			.grid-container {
+			.grid {
 				display: grid;
-				grid-template-columns: 1fr 1fr 1fr; /* Creates 3 equal columns */
-				gap: 10px; /* Adds space between grid items */
-				padding: 10px;
-				background-color: #f2f2f2;
+				grid-template-columns: repeat(5, 1fr);
+				grid-template-rows: repeat(5, 1fr);
+				grid-column-gap: 0px;
+				grid-row-gap: 0px;
 			}
 		</style>
 		END
 	}
 
 	method RENDER {
-		$.style ~
+#		$.style ~
 		q:to/END/
-		<div class="grid-container">
+		<div class="grid">
 			<@.items: $i>
 				<&Item($i)>
 			</@>

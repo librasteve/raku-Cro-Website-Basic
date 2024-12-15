@@ -8,17 +8,18 @@ my $topic;
     use HTML::Functional;
 
     $template =
+        h3 'Table',
         div [
             mytable $[[1, 2], [3, 4]], :$topic;
-            row $[5,6], :$topic;
-            cell 42, :$topic;
         ],
         hr,
+        h3 'Grid',
         div [
             grid $(1..6), :$topic
-        ];
+        ],
+    ;
 
-    warn $template; $*ERR.flush;
+#    warn $template; $*ERR.flush;
 }
 
 use Cro::HTTP::Router;
