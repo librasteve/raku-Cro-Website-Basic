@@ -1,6 +1,7 @@
 use Cromponent;
 use Cromponent::MyLib;
 
+my $cromponent = Cromponent.new;
 my $template;
 my $topic;
 
@@ -28,11 +29,10 @@ use Cro::WebApp::Template;
 sub happy_tm_xmas-routes() is export {
 
     route {
-        clear-components;
-        add-components Grid, Item;
+        $cromponent.add: Grid, Item;
 
         get -> {
-            template-with-components $template, $topic;
+            template-with-components $cromponent, $template, $topic;
         }
     }
 }

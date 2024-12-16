@@ -1,6 +1,7 @@
 use Cromponent;
 use Cromponent::MyLib;
 
+my $cromponent = Cromponent.new;
 my $template;
 my $topic;
 
@@ -12,13 +13,12 @@ my $topic;
         div [
             mytable $[[1, 2], [3, 4]], :$topic
         ],
-        hr,   #iamerejh
-#        h3 'Grid',
-#        div [
-#            grid $(1..6), :$topic
-#        ],
+        hr,
+        h3 'Grid',
+        div [
+            grid $(1..6), :$topic
+        ],
     ;
-
 }
 
 use Cro::HTTP::Router;
@@ -27,12 +27,10 @@ use Cro::WebApp::Template;
 sub sharc-routes() is export {
 
     route {
-        clear-components;
-        add-components MyTable, Row, Cell;
+        $cromponent.add: MyTable, Row, Cell, Grid, Item;
 
         get -> {
-            template-with-components $template, $topic;
+            template-with-components $cromponent, $template, $topic;
         }
     }
 }
-
