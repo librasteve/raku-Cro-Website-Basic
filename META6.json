@@ -12,7 +12,9 @@
         "Cro::WebApp",
         "JSON::Fast",
         "Cro::HTTP::Router",
-        "Cro::HTTP::Log::File"
+        "Cro::HTTP::Log::File",
+        "HTML::Functional",
+        "Cro::WebApp::Template"
     ],
     "build-depends": [],
     "provides": {
