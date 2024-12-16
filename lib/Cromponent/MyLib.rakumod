@@ -1,5 +1,3 @@
-use Cromponent;
-
 my @manifest = <MyTable Row Cell Grid Item>;
 
 class Cell is export {
