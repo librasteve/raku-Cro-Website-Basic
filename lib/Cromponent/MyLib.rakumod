@@ -34,6 +34,7 @@ class Row is export {
 	}
 }
 
+#| https://picocss.com/docs/table TODO
 class MyTable is export {
 	has Row() @.rows is required;
 	

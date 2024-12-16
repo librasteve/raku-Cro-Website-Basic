@@ -19,6 +19,7 @@
         "Cromponent": "lib/Cromponent.rakumod",
         "Cromponent::MyLib": "lib/Cromponent/MyLib.rakumod",
         "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",
+        "Cro::Website::Basic::Routes::SHARC": "lib/Cro-Website-Basic/Routes/SHARC.rakumod",
         "Cro::Website::Basic::Routes::Merry-Cromas": "lib/Cro-Website-Basic/Routes/Merry-Cromas.rakumod",
         "Cro::Website::Basic::Routes::Happy-TM-Xmas": "lib/Cro-Website-Basic/Routes/Happy-TM-Xmas.rakumod"
     },

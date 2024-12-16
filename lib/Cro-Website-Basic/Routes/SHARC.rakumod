@@ -8,28 +8,27 @@ my $topic;
     use HTML::Functional;
 
     $template =
-#        h3 'Table',
-#        div [
-#            mytable $[[1, 2], [3, 4]], :$topic
-#        ],
-#        hr,
-        h3 'Grid',
+        h3 'Table',
         div [
-            grid $(1..6), :$topic
+            mytable $[[1, 2], [3, 4]], :$topic
         ],
+        hr,   #iamerejh
+#        h3 'Grid',
+#        div [
+#            grid $(1..6), :$topic
+#        ],
     ;
 
-#    warn $template; $*ERR.flush;
 }
 
 use Cro::HTTP::Router;
 use Cro::WebApp::Template;
 
-sub happy_tm_xmas-routes() is export {
+sub sharc-routes() is export {
 
     route {
         clear-components;
-        add-components Grid, Item;
+        add-components MyTable, Row, Cell;
 
         get -> {
             template-with-components $template, $topic;
