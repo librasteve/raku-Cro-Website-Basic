@@ -21,13 +21,14 @@ HTML focus - low integration SASS
 
 # TODOs
 - [x] $topic var to handle multiple component instances
+- [ ] add non-fragment HTMX example, xmassify - active search
 - make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
+- do all pico examples https://picocss.com/docs/
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
 - language switcher
-- 
 
 # Local
 
