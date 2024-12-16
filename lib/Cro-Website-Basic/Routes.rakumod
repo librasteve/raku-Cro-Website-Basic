@@ -38,5 +38,8 @@ sub routes() is export {
 
         use Cro::Website::Basic::Routes::Happy-TM-Xmas;
         include happy_tm_xmas => happy_tm_xmas-routes;
+
+        use Cro::Website::Basic::Routes::SHARC;
+        include sharc => sharc-routes;
     }
 }

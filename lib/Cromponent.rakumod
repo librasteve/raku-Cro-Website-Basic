@@ -3,7 +3,7 @@ use Cro::WebApp::Template;
 use Cro::HTTP::Router;
 
 # this fork from FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a   (Dec 8 2024)
-# pre macro "improvements" - reused here under Artistic 2.0
+# pre macro "improvements" - used here under Artistic 2.0
 
 my %components;
 
@@ -15,7 +15,11 @@ multi trait_mod:<is>(Method $m, :$accessible!) is export {
 	$m does Accessible
 }
 
-multi add-components(*@components) is export {
+sub clear-components is export {
+	%components := {};
+}
+
+sub add-components(*@components) is export {
 	for @components -> Mu:U $component {
 		add-component $component
 	}
@@ -78,11 +82,13 @@ sub add-component(
 }
 
 sub template-with-components($template, $data!) is export {
+
 	my $header = %components.values.map({
 		my $name = .<component>.^name;
 		my $t    = .<component>.RENDER;
 		"<:sub {$name}(\$_)> $t </:>"
 	}).join: "\n";
+
 	template-inline "$header \n\n\n$template", $data;
 }
 
