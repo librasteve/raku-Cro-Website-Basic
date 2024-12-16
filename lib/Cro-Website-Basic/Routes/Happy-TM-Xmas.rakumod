@@ -2,25 +2,45 @@ use Cromponent;
 use Cromponent::MyLib;
 
 my $cromponent = Cromponent.new;
-my $template;
+my $index;
+my $results;
 my $topic;
 
 {  #use a block to avoid namespace collision
+
     use HTML::Functional;
 
-    $template =
-#        h3 'Table',
-#        div [
-#            mytable $[[1, 2], [3, 4]], :$topic
-#        ],
-#        hr,
-        h3 'Grid',
-        div [
-            grid $(1..6), :$topic
+    $index =
+        h3 [
+            'Search Elves',
+            span :class<htmx-indicator>,
+                [ img( :src</img/bars.svg>), 'Searching...' ],
+        ],
+
+        input(  :class<form-control>, :type<search>, :name<search>, :placeholder<Begin typing to search elvesis>,
+                :hx-post</happy_tm_xmas/search>, :hx-trigger<keyup changed delay:500ms, search>,
+                :hx-target<#search-results>, :hx-indicator<.htmx-indicator> ),
+
+        table :class<table>, [
+            thead (
+                tr [
+                    th 'First Name',
+                    th 'Last Name',
+                    th 'Email',
+                ]
+            ),
+            tbody :id<search-results>,
         ],
     ;
 
-#    warn $template; $*ERR.flush;
+    $results =
+
+    ;
+
+
+    #    mytable $[[1, 2], [3, 4]], :$topic
+
+    #    warn $template; $*ERR.flush;
 }
 
 use Cro::HTTP::Router;
@@ -28,20 +48,20 @@ use Cro::WebApp::Template;
 
 sub happy_tm_xmas-routes() is export {
 
-#    route {
-#        $cromponent.add: Grid, Item;
-#
-#        get -> {
-#            template-with-components $cromponent, $template, $topic;
-#        }
-#    }
-
     route {
-        template-location 'templates/happy_tm_xmas';
+
+        $cromponent.add: MyTable, Row, Cell;
 
         get -> {
-            template 'index.crotmp';
+            template-with-components $cromponent, $index, $topic;
         }
+
+
+        template-location 'templates/happy_tm_xmas';
+
+#        get -> {
+#            template 'index.crotmp';
+#        }
 
         post -> 'search' {
             my $needle;
