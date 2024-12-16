@@ -13,22 +13,21 @@ simple website written in Cro::WebApp
 Merry Xmas site with pico root overloaded for scale
 Dark / light implemented via site reload
 
-#### 02-wip
+#### 02-sharc1
 
 add Cromponent (pre macro)
-HTML only - low integration SASS
-
-
+HTML focus - low integration SASS
 
 
 # TODOs
-- $topic var to handle multiple component instances
+- [x] $topic var to handle multiple component instances
 - make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
 - language switcher
+- 
 
 # Local
 
