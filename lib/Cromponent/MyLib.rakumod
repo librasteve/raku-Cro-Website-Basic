@@ -102,19 +102,15 @@ class ActiveTable is export {
 class Results is export {
 	has @.results;
 
-	multi method new(@results) {
-		$.new: :@results
-	}
-
 	method RENDER {
 		q:to/END/
-		<@results>
-		<tr class="">
-			<td><.firstName></td>
-			<td><.lastName></td>
-			<td><.email></td>
-		</tr>
-		</@>
+			<@results>
+			<tr>
+				<td><.firstName></td>
+				<td><.lastName></td>
+				<td><.email></td>
+			</tr>
+			</@>
 		END
 	}
 }
