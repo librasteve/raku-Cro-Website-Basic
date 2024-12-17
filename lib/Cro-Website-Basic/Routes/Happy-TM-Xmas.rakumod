@@ -37,13 +37,16 @@ my $topic;
 
     $results = q:to/END/;
         <@results>
-            <tr class="">
+            <tr>
                 <td><.firstName></td>
                 <td><.lastName></td>
                 <td><.email></td>
             </tr>
         </@>
         END
+
+#    $results = '';
+
 
     warn $index; $*ERR.flush;
 }

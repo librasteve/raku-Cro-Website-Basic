@@ -51,6 +51,24 @@ class MyTable is export {
 	}
 }
 
+class ActiveTable is export {
+	has Row() @.rows is required;
+
+	multi method new(@rows) {
+		$.new: :@rows
+	}
+
+	method RENDER {
+		q:to/END/
+			<table border=1>
+				<@.rows: $r>
+					<&Row($r)>
+				</@>
+			</table>
+		END
+	}
+}
+
 class Item is export {
 	has $.data is required;
 
