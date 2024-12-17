@@ -29,6 +29,7 @@
       <ul hx-target="#content">
         <li><a hx-get="/merry_cromas">Tree Me</a></li>
         <li><a hx-get="/happy_tm_xmas"><b>H</b>appy<b>&trade;&nbsp;X</b>mas</a></li>
+        <li><a hx-get="/todos">todos</a></li>
         <li><a hx-get="/sharc">sharc</a></li>
         <?.dark-mode>
           <li><a href="/light-mode">
@@ -53,8 +54,9 @@
   <footer class="container">
     <p>
       Styled with <a href="https://picocss.com" target="new">pico</a>.
-      Built on <a href="https://cro.raku,org" target="new">cro</a>.
+      Hypered in <a href="https://htmx.org" target="new">htmx</a>.
       Written in <a href="https://raku.org" target="new">raku</a>.
+      Built on <a href="https://cro.raku,org" target="new">cro</a>.
     </p>
   </footer>
 
