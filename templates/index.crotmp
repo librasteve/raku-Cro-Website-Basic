@@ -53,10 +53,11 @@
 
   <footer class="container">
     <p>
-      Styled with <a href="https://picocss.com" target="new">pico</a>.
+      Styled with <a href="https://picocss.com" target="new">picocss</a>.
       Hypered in <a href="https://htmx.org" target="new">htmx</a>.
-      Written in <a href="https://raku.org" target="new">raku</a>.
-      Built on <a href="https://cro.raku,org" target="new">cro</a>.
+      &nbsp;&amp;&nbsp;
+      Rendered in <a href="https://raku.org" target="new">raku</a>.
+      Constructed on <a href="https://cro.raku,org" target="new">cro</a>.
     </p>
   </footer>
 
