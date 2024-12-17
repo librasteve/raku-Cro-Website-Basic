@@ -11,36 +11,41 @@ my $topic;
     use HTML::Functional;
 
     $index =
-        h3 [
-            'Search Elves',
-            span :class<htmx-indicator>,
-                [ img( :src</img/bars.svg>), 'Searching...' ],
-        ],
+        div [
+            h3( [
+                'Search Elves',
+                span :class<htmx-indicator>,
+                    [ img :src</img/bars.svg>; 'Searching...' ]
+            ] );
 
-        input(  :class<form-control>, :type<search>, :name<search>, :placeholder<Begin typing to search elvesis>,
-                :hx-post</happy_tm_xmas/search>, :hx-trigger<keyup changed delay:500ms, search>,
-                :hx-target<#search-results>, :hx-indicator<.htmx-indicator> ),
+            input(  :class<form-control>, :type<search>, :name<search>, :placeholder<Begin typing to search elvesis>,
+                    :hx-post</happy_tm_xmas/search>, :hx-trigger<keyup changed delay:500ms, search>,
+                    :hx-target<#search-results>, :hx-indicator<.htmx-indicator> );
 
-        table :class<table>, [
-            thead (
-                tr [
-                    th 'First Name',
-                    th 'Last Name',
-                    th 'Email',
-                ]
-            ),
-            tbody :id<search-results>,
-        ],
+            table [
+                thead (
+                    tr [
+                        th 'First Name',
+                        th 'Last Name',
+                        th 'Email',
+                    ]
+                ),
+                tbody :id<search-results>,
+            ];
+        ]
     ;
 
-    $results =
+    $results = q:to/END/;
+        <@results>
+            <tr class="">
+                <td><.firstName></td>
+                <td><.lastName></td>
+                <td><.email></td>
+            </tr>
+        </@>
+        END
 
-    ;
-
-
-    #    mytable $[[1, 2], [3, 4]], :$topic
-
-    #    warn $template; $*ERR.flush;
+    warn $index; $*ERR.flush;
 }
 
 use Cro::HTTP::Router;
@@ -56,13 +61,6 @@ sub happy_tm_xmas-routes() is export {
             template-with-components $cromponent, $index, $topic;
         }
 
-
-        template-location 'templates/happy_tm_xmas';
-
-#        get -> {
-#            template 'index.crotmp';
-#        }
-
         post -> 'search' {
             my $needle;
 
@@ -70,7 +68,7 @@ sub happy_tm_xmas-routes() is export {
                 $needle = %fields<search>;
             }
 
-            template 'results.crotmp', { results => search($needle) };
+            template-inline $results, { results => search($needle) };
         }
     }
 }

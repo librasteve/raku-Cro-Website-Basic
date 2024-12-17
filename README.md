@@ -22,6 +22,7 @@ HTML focus - low integration SASS
 # TODOs
 - [x] $topic var to handle multiple component instances
 - [ ] add non-fragment HTMX example, xmassify - active search
+- [ ] add todos & fix load, etc
 - make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
 - do all pico examples https://picocss.com/docs/

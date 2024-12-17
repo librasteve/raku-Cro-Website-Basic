@@ -4,6 +4,7 @@
         <img src="/img/bars.svg" /> Searching...
     </span>
 </h3>
+
 <input class="form-control" type="search" name="search" placeholder="Begin Typing To Search Users..."
     hx-post="/happy_tm_xmas/search" hx-trigger="keyup changed delay:500ms, search" hx-target="#search-results"
     hx-indicator=".htmx-indicator">

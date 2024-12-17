@@ -106,6 +106,7 @@ class Grid is export {
 
 # put in all the tags programmatically
 # viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
+# TODO 				$topic.push: %h; (ie add named args to topic)
 
 my package EXPORT::DEFAULT {
 	for @manifest -> $name {
@@ -113,12 +114,9 @@ my package EXPORT::DEFAULT {
 		my $label = $name.lc;
 
 		OUR::{'&' ~ $label} :=
-
 			sub (*@a, :$topic! is rw, *%h) {
-
 				$topic{$label} = ::($name).new( |@a, |%h );
 				'<&' ~ $name ~ '(.' ~ $label ~ ')>';
-
 			}
 	}
 }
