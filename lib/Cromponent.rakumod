@@ -13,7 +13,7 @@ multi trait_mod:<is>(Method $m, :$accessible!) is export {
 }
 
 class Cromponent {
-
+	has $.location = '';
 	has %.components;
 
 	multi method add(*@components) {
@@ -33,7 +33,7 @@ class Cromponent {
 		post -> Str $ where $url-part {
 			request-body -> $data {
 				my $new = create |$data.pairs.Map;
-				redirect "/{$url-part}/{ $new.id }", :see-other
+				redirect "/{$!location}/{$url-part}/{ $new.id }", :see-other
 			}
 		}
 
@@ -63,13 +63,13 @@ class Cromponent {
 					put -> Str $ where $url-part, $id, Str $name {
 						request-body -> $data {
 							load($id)."$name"(|$data.pairs.Map);
-							redirect "/{ $url-part }/{ $id }", :see-other
+							redirect "/{$!location}/{ $url-part }/{ $id }", :see-other
 						}
 					}
 				} else {
 					get -> Str $ where $url-part, $id, Str $name {
 						load($id)."$name"();
-						redirect "/{ $url-part }/{ $id }", :see-other
+						redirect "/{$!location}/{ $url-part }/{ $id }", :see-other
 					}
 				}
 			}

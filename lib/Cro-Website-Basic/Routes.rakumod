@@ -41,5 +41,8 @@ sub routes() is export {
 
         use Cro::Website::Basic::Routes::SHARC;
         include sharc => sharc-routes;
+
+        use Cro::Website::Basic::Routes::Todos;
+        include todos => todos-routes;
     }
 }

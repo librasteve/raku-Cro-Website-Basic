@@ -18,13 +18,15 @@ Dark / light implemented via site reload
 add Cromponent (pre macro)
 HTML focus - low integration SASS
 
+#### 03-sharc2
+
 
 # TODOs
 - [x] $topic var to handle multiple component instances
-- [ ] add non-fragment HTMX example, xmassify - active search
+- [x] add non-fragment HTMX example, xmassify - active search
 - [ ] add todos & fix load, etc
-- make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
+- make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
 - do all pico examples https://picocss.com/docs/
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
