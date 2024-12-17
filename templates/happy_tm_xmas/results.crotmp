@@ -1,7 +1,0 @@
-<@results>
-<tr class="">
-    <td><.firstName></td>
-    <td><.lastName></td>
-    <td><.email></td>
-</tr>
-</@>

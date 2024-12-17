@@ -3,52 +3,30 @@ use Cromponent::MyLib;
 
 my $cromponent = Cromponent.new;
 my $index;
-my $results;
 my $topic;
 
-{  #use a block to avoid namespace collision
+{  #block to avoid namespace collision
 
     use HTML::Functional;
 
     $index =
         div [
-            h3( [
+            h3 [
                 'Search Elves',
-                span :class<htmx-indicator>,
-                    [ img :src</img/bars.svg>; 'Searching...' ]
-            ] );
-
-            input(  :class<form-control>, :type<search>, :name<search>, :placeholder<Begin typing to search elvesis>,
-                    :hx-post</happy_tm_xmas/search>, :hx-trigger<keyup changed delay:500ms, search>,
-                    :hx-target<#search-results>, :hx-indicator<.htmx-indicator> );
-
-            table [
-                thead (
-                    tr [
-                        th 'First Name',
-                        th 'Last Name',
-                        th 'Email',
-                    ]
-                ),
-                tbody :id<search-results>,
+                span :class<htmx-indicator>, [ img :src</img/bars.svg>; '  Searching...' ]
             ];
+
+            input :class<form-control>, :type<search>, :name<search>,
+                :placeholder<Begin typing to search elvesis>,
+                :hx-post</happy_tm_xmas/search>,
+                :hx-trigger<keyup changed delay:500ms, search>,
+                :hx-target<#search-results>,
+                :hx-indicator<.htmx-indicator>;
+
+            activetable :thead<Given Elven Elfmail>, :$topic;
         ]
     ;
 
-    $results = q:to/END/;
-        <@results>
-            <tr>
-                <td><.firstName></td>
-                <td><.lastName></td>
-                <td><.email></td>
-            </tr>
-        </@>
-        END
-
-#    $results = '';
-
-
-    warn $index; $*ERR.flush;
 }
 
 use Cro::HTTP::Router;
@@ -58,7 +36,7 @@ sub happy_tm_xmas-routes() is export {
 
     route {
 
-        $cromponent.add: MyTable, Row, Cell;
+        $cromponent.add: Results, ActiveTable, THead, HCell, Row, Cell;
 
         get -> {
             template-with-components $cromponent, $index, $topic;
@@ -71,14 +49,27 @@ sub happy_tm_xmas-routes() is export {
                 $needle = %fields<search>;
             }
 
-            template-inline $results, { results => search($needle) };
+            template-with-components $cromponent, results( results => search($needle), :$topic), $topic;
         }
     }
 }
 
+sub search($needle) {
+
+    sub check($str) { $str.contains($needle, :i) };
+
+    data.grep: (
+        *.<firstName>.&check,
+        *.<lastName>.&check,
+        *.<email>.&check,
+    ).any;
+}
+
 use JSON::Fast;
 
-my $data =  from-json q:to/END/;
+sub data() {
+
+    from-json q:to/END/;
     [
         {"firstName": "Venus", "lastName": "Grimes", "email": "lectus.rutrum@Duisa.edu", "city": "Ankara"},
         {"firstName": "Fletcher", "lastName": "Owen", "email": "metus@Aenean.org", "city": "Niort"},
@@ -182,16 +173,4 @@ my $data =  from-json q:to/END/;
         {"firstName": "Caryn", "lastName": "Hooper", "email": "eu.enim.Etiam@ridiculus.org", "city": "Amelia"}
     ]
     END
-;
-
-
-sub search($needle) {
-
-    sub check($str) { $str.contains($needle, :i) };
-
-    $data.grep: (
-    *.<firstName>.&check,
-    *.<lastName>.&check,
-    *.<email>.&check,
-    ).any;
 }

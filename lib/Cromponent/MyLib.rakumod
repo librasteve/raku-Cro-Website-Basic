@@ -1,4 +1,4 @@
-my @manifest = <MyTable Row Cell Grid Item>;
+my @manifest = <Results ActiveTable THead HCell MyTable Row Cell Grid Item>;
 
 class Cell is export {
 	has $.data is required;
@@ -51,20 +51,70 @@ class MyTable is export {
 	}
 }
 
-class ActiveTable is export {
-	has Row() @.rows is required;
+class HCell is export {
+	has $.data is required;
 
-	multi method new(@rows) {
-		$.new: :@rows
+	multi method new($data) {
+		$.new: :$data
 	}
 
 	method RENDER {
 		q:to/END/
-			<table border=1>
-				<@.rows: $r>
-					<&Row($r)>
+			<th><.data></th>
+		END
+	}
+}
+
+class THead is export {
+	has HCell() @.cells is required;
+
+	multi method new(@cells) {
+		$.new: :@cells
+	}
+
+	method RENDER {
+		q:to/END/
+			<tr>
+				<@.cells: $c>
+					<&HCell($c)>
 				</@>
+			</tr>
+		END
+	}
+}
+
+class ActiveTable is export {
+	has THead() $.thead;
+
+	method RENDER {
+		q:to/END/
+			<table class="striped">
+				<?.thead>
+					<&THead(.thead)>
+				</?>
+				<tbody id="search-results">
+				</tbody>
 			</table>
+		END
+	}
+}
+
+class Results is export {
+	has @.results;
+
+	multi method new(@results) {
+		$.new: :@results
+	}
+
+	method RENDER {
+		q:to/END/
+		<@results>
+		<tr class="">
+			<td><.firstName></td>
+			<td><.lastName></td>
+			<td><.email></td>
+		</tr>
+		</@>
 		END
 	}
 }
