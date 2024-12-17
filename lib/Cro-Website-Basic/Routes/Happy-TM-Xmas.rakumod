@@ -2,8 +2,7 @@ use Cromponent;
 use Cromponent::MyLib;
 
 my $cromponent = Cromponent.new;
-my $index;
-my $topic;
+my ($index, $topic);
 
 {  #block to avoid namespace collision
 
@@ -24,9 +23,7 @@ my $topic;
                 :hx-indicator<.htmx-indicator>;
 
             activetable :thead<Given Elven Elfmail>, :$topic;
-        ]
-    ;
-
+        ];
 }
 
 use Cro::HTTP::Router;
