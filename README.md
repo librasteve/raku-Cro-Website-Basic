@@ -4,6 +4,17 @@
 
 simple website written in Cro::WebApp
 
+path is 
+  1. get to the point where I can build a website on Cro the right way 
+  2. build a static site example that could be a new design for raku.org and then offer it to the team, 
+  3. add htmx based edit / preview to certain pages for admin (like the current rakudoc site), with raku syntax highlighting with Rainbow and 
+  4. do something similar for markdown
+
+# Cromponent libs
+
+https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
+go for maximally decomposed apps
+
 ---
 
 # Branches
@@ -20,18 +31,32 @@ HTML focus - low integration SASS
 
 #### 03-sharc2
 
+add Todos
+
+#### 04-sharrc3
+
+merge latest Cromponent
+
+
+# Name
+- redcro::htmx
+- sharrc
+
 
 # TODOs
 - [x] $topic var to handle multiple component instances
 - [x] add non-fragment HTMX example, xmassify - active search
-- [ ] add todos & fix load, etc
+- [x] add todos & fix load, etc
 - do the full pico table example
-- make an export set ('pico' ?) to HTML::Functional to drop dupes (table, thead, etc...)
-- do all pico examples https://picocss.com/docs/
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
 - language switcher
+- sitemap & robots.txt
+- do all pico examples https://picocss.com/docs/
+- do all htmx examples
+- todos to library
+- export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
 
 # Local
 
