@@ -1,11 +1,6 @@
 use Cro::WebApp::Template;
 use Cro::HTTP::Router;
 
-# this fork from FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a   (Dec 8 2024)
-# pre macro "improvements" - used here under Artistic 2.0
-
-# major changes have been applied subsequently
-
 role Accessible {
 	has Bool $.accessible = True;
 }
@@ -40,14 +35,9 @@ class Component {
 		}
 
 		with &load {
-#			get -> Str $ where $url-part, $id {
-#				my $tag = $component.^name;
-#				my $comp = load $id;
-#				template-with-components self, "<\&{ $tag }( .comp )>", { :$comp };
-#			}
 			get -> Str $ where $url-part, $id {
 				my $comp = load $id;
-				splooge $comp
+				render $comp;
 			}
 
 			delete -> Str $ where $url-part, $id {
@@ -95,7 +85,7 @@ sub template-with-components($component, $template, $data!) is export {
 }
 
 #!iamerejh
-sub splooge($component) is export {
+sub render($component) is export {
 	content 'text/html', $component.render;
 }
 
@@ -105,27 +95,28 @@ sub splooge($component) is export {
 
 =head1 NAME
 
-Cromponent - blah blah blah
+Component - blah blah blah
 
 =head1 SYNOPSIS
 
 =begin code :lang<raku>
 
-use Cromponent;
+use Component;
 
 =end code
 
 =head1 DESCRIPTION
 
-Cromponent is ...
+Component is ...
 
-=head1 AUTHOR
+=head1 AUTHORS
 
+librasteve <librasteve@fiurnival.net>
 Fernando Corrêa de Oliveira <fernando.correa@humanstate.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2024 Fernando Corrêa de Oliveira
+Copyright 2024-2025 The Authors
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
