@@ -14,41 +14,6 @@ class Todo {
         $!done = !$!done
     }
 
-    method RENDER {
-        qq:to/END/;
-			<tr>
-				<td>
-					<input
-						type=checkbox
-						<?.done> checked </?>
-						hx-get="/todos/todo/<.id>/toggle"
-						hx-target="closest tr"
-						hx-swap="outerHTML"
-					>
-				</td>
-				<td>
-					<?.done>
-						<del><.data></del>
-					</?>
-					<!>
-						<.data>
-					</!>
-				</td>
-				<td>
-					<button
-						hx-delete="/todos/todo/<.id>"
-						hx-confirm="Are you sure?"
-						hx-target="closest tr"
-						hx-swap="delete"
-					>
-						-
-					</button>
-				</td>
-			</tr>
-		END
-
-    }
-
     method render {
         qq:to/END/;
 			<tr>
@@ -76,7 +41,6 @@ class Todo {
 				</td>
 			</tr>
 		END
-
     }
 }
 
@@ -99,7 +63,6 @@ class Frame {
                 </form>
             </div>
         END
-
     }
 }
 
@@ -111,7 +74,7 @@ sub todos-routes() is export {
         my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
 
         get -> {
-            splooge Frame.new: :@todos;
+            render Frame.new: :@todos;
         }
 
         $component.add:
