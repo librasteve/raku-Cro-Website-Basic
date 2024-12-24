@@ -84,7 +84,6 @@ sub template-with-components($component, $template, $data!) is export {
 	template-inline "$header \n\n\n$template", $data;
 }
 
-#!iamerejh
 sub render($component) is export {
 	content 'text/html', $component.render;
 }

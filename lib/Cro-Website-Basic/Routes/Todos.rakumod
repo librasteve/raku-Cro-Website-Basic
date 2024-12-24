@@ -20,7 +20,7 @@ class Todo {
 				<td>
 					<input
 						type=checkbox
-						 { $!done ?? 'checked' !! ' ' }
+                        { $!done ?? 'checked' !! '' }
 						hx-get="/todos/todo/{ $!id }/toggle"
 						hx-target="closest tr"
 						hx-swap="outerHTML"
@@ -51,7 +51,7 @@ class Frame {
         qq:to/END/;
             <div>
                 <table>
-                     {@!todos.map: *.render}
+                     { @!todos.map: *.render }
                 </table>
                 <form
                     hx-post="/todos/todo"
@@ -70,7 +70,7 @@ use Cro::HTTP::Router;
 use Cro::WebApp::Template;
 
 sub todos-routes() is export {
-        route {
+    route {
         my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
 
         get -> {

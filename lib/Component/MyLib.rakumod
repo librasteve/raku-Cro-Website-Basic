@@ -1,3 +1,5 @@
+use HTML::Functional;
+
 my @manifest = <Results ActiveTable THead HCell MyTable Row Cell Grid Item>;
 
 class Cell is export {
@@ -34,20 +36,22 @@ class Row is export {
 
 #| https://picocss.com/docs/table TODO
 class MyTable is export {
-	has Row() @.rows is required;
+	has @.data;
 	
-	multi method new(@rows) {
-		$.new: :@rows
+	multi method new(@data) {
+		$.new: :@data;
 	}
 
-	method RENDER {
-		q:to/END/
-			<table border=1>
-				<@.rows: $r>
-					<&Row($r)>
-				</@>
-			</table>
-		END
+	method render {
+		table :border<1>,
+			tbody
+			do for @!data -> @row {
+				tr
+				do for @row -> $cell {
+					td $cell
+				}
+			}
+		;
 	}
 }
 
@@ -163,6 +167,17 @@ class Grid is export {
 		</div>
 		END
 	}
+
+	method render {
+#		$.style ~
+		q:to/END/
+		<div class="grid">
+			<@.items: $i>
+				<&Item($i)>
+			</@>
+		</div>
+		END
+	}
 }
 
 
@@ -181,6 +196,11 @@ my package EXPORT::DEFAULT {
 			sub (*@a, :$topic! is rw, *%h) {
 				$topic{$label} = ::($name).new( |@a, |%h );
 				'<&' ~ $name ~ '(.' ~ $label ~ ')>';
+			}
+
+		OUR::{'&x-' ~ $label} :=
+			sub (*@a, *%h) {
+				::($name).new( |@a, |%h ).render;
 			}
 	}
 }
