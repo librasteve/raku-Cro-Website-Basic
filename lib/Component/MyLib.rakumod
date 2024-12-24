@@ -44,10 +44,8 @@ class MyTable is export {
 
 	method render {
 		table :border<1>,
-			tbody
-			do for @!data -> @row {
-				tr
-				do for @row -> $cell {
+			tbody do for @!data -> @row {
+				tr do for @row  -> $cell {
 					td $cell
 				}
 			}
@@ -135,7 +133,7 @@ class Item is export {
 
 #| https://picocss.com/docs/grid
 class Grid is export {
-	has Item() @.items is required;
+	has @.items;
 
 	multi method new(@items) {
 		$.new: :@items
@@ -157,26 +155,13 @@ class Grid is export {
 		END
 	}
 
-	method RENDER {
-#		$.style ~
-		q:to/END/
-		<div class="grid">
-			<@.items: $i>
-				<&Item($i)>
-			</@>
-		</div>
-		END
-	}
-
 	method render {
 #		$.style ~
-		q:to/END/
-		<div class="grid">
-			<@.items: $i>
-				<&Item($i)>
-			</@>
-		</div>
-		END
+		div :class<grid>,
+			do for @!items -> $item {
+				div $item
+			}
+		;
 	}
 }
 
@@ -185,13 +170,13 @@ class Grid is export {
 
 # put in all the tags programmatically
 # viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
-# TODO 				$topic.push: %h; (ie add named args to topic)
 
 my package EXPORT::DEFAULT {
 	for @manifest -> $name {
 
 		my $label = $name.lc;
 
+		# FIXME rm
 		OUR::{'&' ~ $label} :=
 			sub (*@a, :$topic! is rw, *%h) {
 				$topic{$label} = ::($name).new( |@a, |%h );
