@@ -56,17 +56,17 @@ class Todo {
 					<input
 						type=checkbox
 						 { $!done ?? 'checked' !! ' ' }
-						hx-get="/todos/todo/ { $!id }/toggle"
+						hx-get="/todos/todo/{ $!id }/toggle"
 						hx-target="closest tr"
 						hx-swap="outerHTML"
 					>
 				</td>
 				<td>
-					 { $!done ?? "<del> { $!data }</del>" !! $!data }
+					 { $!done ?? "<del>{ $!data }</del>" !! $!data }
 				</td>
 				<td>
 					<button
-						hx-delete="/todos/todo/ { $!id }"
+						hx-delete="/todos/todo/{ $!id }"
 						hx-confirm="Are you sure?"
 						hx-target="closest tr"
 						hx-swap="delete"
@@ -84,11 +84,10 @@ class Frame {
     has Todo() @.todos;
 
     method render {
-        warn { .render for @!todos}; $*ERR.flush;
         qq:to/END/;
             <div>
                 <table>
-                     {.render for @!todos}
+                     {@!todos.map: *.render}
                 </table>
                 <form
                     hx-post="/todos/todo"
@@ -109,30 +108,17 @@ use Cro::WebApp::Template;
 
 sub todos-routes() is export {
         route {
-        my @todos = do for <blablabla blebleble> -> $data { Todo.new:  : $data }
+        my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
 
         get -> {
             splooge Frame.new: :@todos;
-
-
         }
 
-    $component.
-            add:
-
+        $component.add:
             Todo,
-        :load( -> UInt() $i d
-                { @todos.
-            f r t: { .id
-                == $id } }),
-
-            :create(-> *%data
-                {
-             @todos.push: my $n = Todo.new: |%data; $n }
-                ),
-        :de e e( -> U n t(
-            ) $id {
-            @todos .= grep: { .id != $id } }),
+            :load( -> UInt() $id { @todos.first: { .id == $id } }),
+            :create(-> *%data { @todos.push: my $n = Todo.new: |%data; $n }),
+            :delete( -> UInt() $id { @todos .= grep: { .id != $id } }),
         ;
     }
 }
