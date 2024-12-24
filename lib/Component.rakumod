@@ -4,6 +4,8 @@ use Cro::HTTP::Router;
 # this fork from FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a   (Dec 8 2024)
 # pre macro "improvements" - used here under Artistic 2.0
 
+# major changes have been applied subsequently
+
 role Accessible {
 	has Bool $.accessible = True;
 }
@@ -12,7 +14,7 @@ multi trait_mod:<is>(Method $m, :$accessible!) is export {
 	$m does Accessible
 }
 
-class Cromponent {
+class Component {
 	has $.location = '';
 	has %.components;
 
@@ -77,15 +79,20 @@ class Cromponent {
 	}
 }
 
-sub template-with-components($cromponent, $template, $data!) is export {
+sub template-with-components($component, $template, $data!) is export {
 
-	my $header = $cromponent.components.values.map({
+	my $header = $component.components.values.map({
 		my $name = .<component>.^name;
 		my $t    = .<component>.RENDER;
 		"<:sub {$name}(\$_)> $t </:>"
 	}).join: "\n";
 
 	template-inline "$header \n\n\n$template", $data;
+}
+
+#!iamerejh
+sub splooge($component) is export {
+	content 'text/html', $component.render;
 }
 
 

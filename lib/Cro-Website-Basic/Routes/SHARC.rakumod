@@ -1,7 +1,7 @@
-use Cromponent;
-use Cromponent::MyLib;
+use Component;
+use Component::MyLib;
 
-my $cromponent = Cromponent.new;
+my $component = Component.new;
 my $template;
 my $topic;
 
@@ -27,10 +27,10 @@ use Cro::WebApp::Template;
 sub sharc-routes() is export {
 
     route {
-        $cromponent.add: MyTable, Row, Cell, Grid, Item;
+        $component.add: MyTable, Row, Cell, Grid, Item;
 
         get -> {
-            template-with-components $cromponent, $template, $topic;
+            template-with-components $component, $template, $topic;
         }
     }
 }
