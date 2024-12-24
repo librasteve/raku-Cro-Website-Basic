@@ -84,6 +84,7 @@ sub template-with-components($component, $template, $data!) is export {
 	template-inline "$header \n\n\n$template", $data;
 }
 
+# FIXME rename
 sub render($component) is export {
 	content 'text/html', $component.render;
 }
