@@ -10,7 +10,7 @@ path is
   3. add htmx based edit / preview to certain pages for admin (like the current rakudoc site), with raku syntax highlighting with Rainbow and 
   4. do something similar for markdown
 
-# Cromponent libs
+# Component libs
 
 https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 go for maximally decomposed apps
@@ -26,7 +26,7 @@ Dark / light implemented via site reload
 
 #### 02-sharc1
 
-add Cromponent (pre macro)
+add Component (pre macro)
 HTML focus - low integration SASS
 
 #### 03-sharc2
@@ -35,8 +35,15 @@ add Todos
 
 #### 04-sharrc3
 
-merge latest Cromponent
+merge latest Component xxx
 
+#### 05-sharrc4 (from 04-sharrc3)
+
+Component => Component
+
+- [ ] No Cro templates
+- [ ] `content 'text/html', "html"`
+- [ ] `.render` returns HTML as Str
 
 # Name
 - redcro::htmx

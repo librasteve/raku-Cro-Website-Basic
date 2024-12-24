@@ -18,8 +18,8 @@
     ],
     "build-depends": [],
     "provides": {
-        "Cromponent": "lib/Cromponent.rakumod",
-        "Cromponent::MyLib": "lib/Cromponent/MyLib.rakumod",
+        "Component": "lib/Component.rakumod",
+        "Component::MyLib": "lib/Component/MyLib.rakumod",
         "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",
         "Cro::Website::Basic::Routes::SHARC": "lib/Cro-Website-Basic/Routes/SHARC.rakumod",
         "Cro::Website::Basic::Routes::Todos": "lib/Cro-Website-Basic/Routes/Todos.rakumod",

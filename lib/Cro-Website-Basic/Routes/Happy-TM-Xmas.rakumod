@@ -1,7 +1,7 @@
-use Cromponent;
-use Cromponent::MyLib;
+use Component;
+use Component::MyLib;
 
-my $cromponent = Cromponent.new;
+my $component = Component.new;
 my ($index, $topic);
 
 {  #block to avoid namespace collision
@@ -33,10 +33,10 @@ sub happy_tm_xmas-routes() is export {
 
     route {
 
-        $cromponent.add: Results, ActiveTable, THead, HCell, Row, Cell;
+        $component.add: Results, ActiveTable, THead, HCell, Row, Cell;
 
         get -> {
-            template-with-components $cromponent, $index, $topic;
+            template-with-components $component, $index, $topic;
         }
 
         post -> 'search' {
@@ -46,7 +46,7 @@ sub happy_tm_xmas-routes() is export {
                 $needle = %fields<search>;
             }
 
-            template-with-components $cromponent, results( results => search($needle), :$topic), $topic;
+            template-with-components $component, results( results => search($needle), :$topic), $topic;
         }
     }
 }
