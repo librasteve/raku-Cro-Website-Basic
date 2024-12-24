@@ -11,12 +11,12 @@ my $topic;
     $template =
         h3 'Table',
         div [
-            mytable $[[1, 2], [3, 4]], :$topic
+            x-mytable $[[1, 2], [3, 4]], :$topic
         ],
         hr,
         h3 'Grid',
         div [
-            grid $(1..6), :$topic
+            x-grid $(1..6), :$topic
         ],
     ;
 }
@@ -29,8 +29,12 @@ sub sharc-routes() is export {
     route {
         $component.add: MyTable, Row, Cell, Grid, Item;
 
+#        get -> {
+#            template-with-components $component, $template, $topic;
+#        }
+
         get -> {
-            template-with-components $component, $template, $topic;
+            content 'text/html', $template;
         }
     }
 }
