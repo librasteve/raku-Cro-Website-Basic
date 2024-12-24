@@ -40,10 +40,14 @@ class Component {
 		}
 
 		with &load {
+#			get -> Str $ where $url-part, $id {
+#				my $tag = $component.^name;
+#				my $comp = load $id;
+#				template-with-components self, "<\&{ $tag }( .comp )>", { :$comp };
+#			}
 			get -> Str $ where $url-part, $id {
-				my $tag = $component.^name;
 				my $comp = load $id;
-				template-with-components self, "<\&{ $tag }( .comp )>", { :$comp };
+				splooge $comp
 			}
 
 			delete -> Str $ where $url-part, $id {
