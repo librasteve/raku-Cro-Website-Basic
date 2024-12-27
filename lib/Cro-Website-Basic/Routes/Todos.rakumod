@@ -1,5 +1,4 @@
 use Component;
-use Component::MyLib;
 
 my $component = Component.new: :location<todos>;
 
@@ -74,7 +73,7 @@ sub todos-routes() is export {
         my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
 
         get -> {
-            render Frame.new: :@todos;
+            render-me Frame.new: :@todos;
         }
 
         $component.add:

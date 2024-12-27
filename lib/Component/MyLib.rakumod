@@ -1,133 +1,67 @@
 use HTML::Functional;
 
-my @manifest = <Results ActiveTable THead HCell MyTable Row Cell Grid Item>;
+my @manifest = <Results ActiveTable MyTable Grid>;
+#warn self.thead.raku; $*ERR.flush;
 
-class Cell is export {
-	has $.data is required;
+role THead {
+	has @.thead;
 
-	multi method new($data) {
-		$.new: :$data
-	}
+#	method thead {
+#		{
+#			thead do for @!thead -> $cell {
+#				th $cell
+#			}
+#		} with @!thead
+#	}
 
-	method RENDER {
-		q:to/END/
-			<td><.data></td>
-		END
-	}
-}
-
-class Row is export {
-	has Cell() @.cells is required;
-
-	multi method new(@cells) {
-		$.new: :@cells
-	}
-
-	method RENDER {
-		q:to/END/
-			<tr>
-				<@.cells: $c>
-					<&Cell($c)>
-				</@>
-			</tr>
-		END
+	method thead( --> Str() ) {
+		thead do for @!thead -> $cell {
+			th $cell
+		}
 	}
 }
 
 #| https://picocss.com/docs/table TODO
-class MyTable is export {
+class MyTable does THead is export {
 	has @.data;
-	
-	multi method new(@data) {
-		$.new: :@data;
+
+	multi method new(@data, *%h) {
+		$.new: :@data, |%h
 	}
 
 	method render {
-		table :border<1>,
+		table :border<1>, [
+			self.thead;
 			tbody do for @!data -> @row {
 				tr do for @row  -> $cell {
 					td $cell
 				}
 			}
-		;
+		];
 	}
 }
 
-class HCell is export {
-	has $.data is required;
-
-	multi method new($data) {
-		$.new: :$data
-	}
-
-	method RENDER {
-		q:to/END/
-			<th><.data></th>
-		END
-	}
-}
-
-class THead is export {
-	has HCell() @.cells is required;
-
-	multi method new(@cells) {
-		$.new: :@cells
-	}
-
-	method RENDER {
-		q:to/END/
-			<tr>
-				<@.cells: $c>
-					<&HCell($c)>
-				</@>
-			</tr>
-		END
-	}
-}
-
-class ActiveTable is export {
-	has THead() $.thead;
-
-	method RENDER {
-		q:to/END/
-			<table class="striped">
-				<?.thead>
-					<&THead(.thead)>
-				</?>
-				<tbody id="search-results">
-				</tbody>
-			</table>
-		END
+class ActiveTable does THead is export {
+	method render {
+		table :class<striped>, [
+			self.thead;
+			tbody :id<search-results>;
+		]
 	}
 }
 
 class Results is export {
 	has @.results;
 
-	method RENDER {
-		q:to/END/
-			<@results>
-			<tr>
-				<td><.firstName></td>
-				<td><.lastName></td>
-				<td><.email></td>
-			</tr>
-			</@>
-		END
-	}
-}
-
-class Item is export {
-	has $.data is required;
-
-	multi method new($data) {
-		$.new: :$data
-	}
-
-	method RENDER {
-		q:to/END/
-			<div><.data></div>
-		END
+	method render {
+		tbody :id<search-results>,
+			do for @!results {
+				tr
+					td .<firstName>,
+					td .<lastName>,
+					td .<email>,
+			}
+		;
 	}
 }
 
@@ -141,6 +75,7 @@ class Grid is export {
 
 	#| example of optional grid style from
 	#| https://cssgrid-generator.netlify.app/
+	# FIXME maybe functional?
 	method style {
 		q:to/END/
 		<style>
@@ -172,18 +107,10 @@ class Grid is export {
 # viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
 
 my package EXPORT::DEFAULT {
+
 	for @manifest -> $name {
 
-		my $label = $name.lc;
-
-		# FIXME rm
-		OUR::{'&' ~ $label} :=
-			sub (*@a, :$topic! is rw, *%h) {
-				$topic{$label} = ::($name).new( |@a, |%h );
-				'<&' ~ $name ~ '(.' ~ $label ~ ')>';
-			}
-
-		OUR::{'&x-' ~ $label} :=
+		OUR::{'&' ~ $name.lc} :=
 			sub (*@a, *%h) {
 				::($name).new( |@a, |%h ).render;
 			}
