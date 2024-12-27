@@ -10,12 +10,12 @@ my $template;
     $template =
         h3 'Table',
         div [
-            x-mytable $[[1, 2], [3, 4]]
+            mytable $[[1, 2], [3, 4]]  #, :thead<Left Right>;
         ],
         hr,
         h3 'Grid',
         div [
-            x-grid $(1..6)
+            grid $(1..6)
         ],
     ;
 }
@@ -26,8 +26,6 @@ use Cro::WebApp::Template;
 sub sharc-routes() is export {
 
     route {
-        $component.add: MyTable, Row, Cell, Grid, Item;  # FIXME
-
         get -> {
             content 'text/html', $template;
         }

@@ -2,7 +2,7 @@ use Component;
 use Component::MyLib;
 
 my $component = Component.new;
-my ($index, $topic);
+my $index;
 
 {  #block to avoid namespace collision
 
@@ -12,17 +12,18 @@ my ($index, $topic);
         div [
             h3 [
                 'Search Elves',
-                span :class<htmx-indicator>, [ img :src</img/bars.svg>; '  Searching...' ]
+                span :class<htmx-indicator>, [img :src</img/bars.svg>; '  Searching...']
             ];
 
             input :class<form-control>, :type<search>, :name<search>,
-                :placeholder<Begin typing to search elvesis>,
-                :hx-post</happy_tm_xmas/search>,
-                :hx-trigger<keyup changed delay:500ms, search>,
-                :hx-target<#search-results>,
-                :hx-indicator<.htmx-indicator>;
+                  :placeholder<Begin typing to search elvesis>,
+                  :hx-post</happy_tm_xmas/search>,
+                  :hx-trigger<keyup changed delay:500ms, search>,
+                  :hx-target<#search-results>,
+                  :hx-swap<outerHTML>,
+                  :hx-indicator<.htmx-indicator>;
 
-            activetable :thead<Given Elven Elfmail>, :$topic;
+            activetable :thead<Given Elven Elfmail>;
         ];
 }
 
@@ -32,11 +33,8 @@ use Cro::WebApp::Template;
 sub happy_tm_xmas-routes() is export {
 
     route {
-
-        $component.add: Results, ActiveTable, THead, HCell, Row, Cell;
-
         get -> {
-            template-with-components $component, $index, $topic;
+            content 'text/html', $index;
         }
 
         post -> 'search' {
@@ -46,11 +44,12 @@ sub happy_tm_xmas-routes() is export {
                 $needle = %fields<search>;
             }
 
-            template-with-components $component, results( results => search($needle), :$topic), $topic;
+            content 'text/html', results( results => search($needle) );
         }
     }
 }
 
+# TODO make me a method on ActiveTable component
 sub search($needle) {
 
     sub check($str) { $str.contains($needle, :i) };
@@ -62,6 +61,7 @@ sub search($needle) {
     ).any;
 }
 
+# TODO put mode part in ActiveTable component
 use JSON::Fast;
 
 sub data() {

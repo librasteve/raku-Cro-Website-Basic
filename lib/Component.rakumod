@@ -37,7 +37,7 @@ class Component {
 		with &load {
 			get -> Str $ where $url-part, $id {
 				my $comp = load $id;
-				render $comp;
+				render-me $comp;
 			}
 
 			delete -> Str $ where $url-part, $id {
@@ -73,51 +73,11 @@ class Component {
 	}
 }
 
-sub template-with-components($component, $template, $data!) is export {
-
-	my $header = $component.components.values.map({
-		my $name = .<component>.^name;
-		my $t    = .<component>.RENDER;
-		"<:sub {$name}(\$_)> $t </:>"
-	}).join: "\n";
-
-	template-inline "$header \n\n\n$template", $data;
-}
-
-# FIXME rename
-sub render($component) is export {
+sub render-me($component) is export {
 	content 'text/html', $component.render;
 }
 
 
-
-=begin pod
-
-=head1 NAME
-
-Component - blah blah blah
-
-=head1 SYNOPSIS
-
-=begin code :lang<raku>
-
-use Component;
-
-=end code
-
-=head1 DESCRIPTION
-
-Component is ...
-
-=head1 AUTHORS
-
-librasteve <librasteve@fiurnival.net>
-Fernando Corrêa de Oliveira <fernando.correa@humanstate.com>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2024-2025 The Authors
-
-This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
-
-=end pod
+# this partial code extracted from FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a   (Dec 8 2024)
+# used here under Artistic 2.0
+# author Fernando Corrêa de Oliveira <fernando.correa@humanstate.com>
