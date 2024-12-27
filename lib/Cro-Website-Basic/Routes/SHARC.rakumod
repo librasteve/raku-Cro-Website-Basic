@@ -1,5 +1,6 @@
 use Component;
 use Component::MyLib;
+
 use HTML::Functional :CRO;
 
 my $template =
