@@ -1,6 +1,6 @@
-use HTML::Functional;
+use HTML::Functional;    # :CRO exclusions not needed here
 
-my @manifest = <Results ActiveTable MyTable Grid>;
+my @components = <Results ActiveTable Table Grid>;
 #warn self.thead.raku; $*ERR.flush;
 
 role THead {
@@ -14,7 +14,7 @@ role THead {
 }
 
 #| https://picocss.com/docs/table TODO
-class MyTable does THead is export {
+class Table does THead {
 	has @.data;
 
 	multi method new(@data, *%h) {
@@ -25,7 +25,7 @@ class MyTable does THead is export {
 		table :border<1>, [
 			self.thead;
 			tbody do for @!data -> @row {
-				tr do for @row  -> $cell {
+				tr do for @row -> $cell {
 					td $cell
 				}
 			}
@@ -33,7 +33,7 @@ class MyTable does THead is export {
 	}
 }
 
-class ActiveTable does THead is export {
+class ActiveTable does THead {
 	method render {
 		table :class<striped>, [
 			self.thead;
@@ -42,7 +42,7 @@ class ActiveTable does THead is export {
 	}
 }
 
-class Results is export {
+class Results {
 	has @.results;
 
 	method render {
@@ -58,11 +58,11 @@ class Results is export {
 }
 
 #| https://picocss.com/docs/grid
-class Grid is export {
+class Grid {
 	has @.items;
 
-	multi method new(@items) {
-		$.new: :@items
+	multi method new(@items, *%h) {
+		$.new: :@items, |%h
 	}
 
 	#| example of optional grid style from
@@ -100,7 +100,7 @@ class Grid is export {
 
 my package EXPORT::DEFAULT {
 
-	for @manifest -> $name {
+	for @components -> $name {
 
 		OUR::{'&' ~ $name.lc} :=
 			sub (*@a, *%h) {

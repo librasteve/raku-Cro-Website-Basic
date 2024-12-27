@@ -1,31 +1,28 @@
 use Component;
 use Component::MyLib;
 
+use HTML::Functional :CRO;
+
 my $component = Component.new;
-my $index;
 
-{  #block to avoid namespace collision
-
-    use HTML::Functional;
-
-    $index =
-        div [
-            h3 [
-                'Search Elves',
-                span :class<htmx-indicator>, [img :src</img/bars.svg>; '  Searching...']
-            ];
-
-            input :class<form-control>, :type<search>, :name<search>,
-                  :placeholder<Begin typing to search elvesis>,
-                  :hx-post</happy_tm_xmas/search>,
-                  :hx-trigger<keyup changed delay:500ms, search>,
-                  :hx-target<#search-results>,
-                  :hx-swap<outerHTML>,
-                  :hx-indicator<.htmx-indicator>;
-
-            activetable :thead<Given Elven Elfmail>;
+my $index =
+    div [
+        h3 [
+            'Search Elves',
+            span :class<htmx-indicator>, [img :src</img/bars.svg>; '  Searching...']
         ];
-}
+
+        input :class<form-control>, :type<search>, :name<search>,
+              :placeholder<Begin typing to search elvesis>,
+              :hx-post</happy_tm_xmas/search>,
+              :hx-trigger<keyup changed delay:500ms, search>,
+              :hx-target<#search-results>,
+              :hx-swap<outerHTML>,
+              :hx-indicator<.htmx-indicator>;
+
+        activetable :thead<Given Elven Elfmail>;
+    ];
+
 
 use Cro::HTTP::Router;
 use Cro::WebApp::Template;
@@ -44,17 +41,17 @@ sub happy_tm_xmas-routes() is export {
                 $needle = %fields<search>;
             }
 
-            content 'text/html', results( results => search($needle) );
+            content 'text/html', results( results => search-me($needle) );
         }
     }
 }
 
 # TODO make me a method on ActiveTable component
-sub search($needle) {
+sub search-me($needle) {
 
     sub check($str) { $str.contains($needle, :i) };
 
-    data.grep: (
+    data-me.grep: (
         *.<firstName>.&check,
         *.<lastName>.&check,
         *.<email>.&check,
@@ -64,7 +61,7 @@ sub search($needle) {
 # TODO put mode part in ActiveTable component
 use JSON::Fast;
 
-sub data() {
+sub data-me() {
 
     from-json q:to/END/;
     [
