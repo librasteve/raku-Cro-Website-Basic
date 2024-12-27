@@ -6,14 +6,6 @@ my @manifest = <Results ActiveTable MyTable Grid>;
 role THead {
 	has @.thead;
 
-#	method thead {
-#		{
-#			thead do for @!thead -> $cell {
-#				th $cell
-#			}
-#		} with @!thead
-#	}
-
 	method thead( --> Str() ) {
 		thead do for @!thead -> $cell {
 			th $cell
