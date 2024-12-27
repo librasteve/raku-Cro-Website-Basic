@@ -41,12 +41,11 @@ merge latest Component xxx
 
 Component => Component
 
-- [ ] No Cro templates
-- [ ] `content 'text/html', "html"`
-- [ ] `.render` returns HTML as Str
+- [x] No Cro templates
+- [x] `content 'text/html', "html"`
+- [x] `.render` returns HTML as Str
 
 # Name
-- redcro::htmx
 - sharrc
 
 
@@ -54,6 +53,7 @@ Component => Component
 - [x] $topic var to handle multiple component instances
 - [x] add non-fragment HTMX example, xmassify - active search
 - [x] add todos & fix load, etc
+- [x] export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
@@ -63,7 +63,6 @@ Component => Component
 - do all pico examples https://picocss.com/docs/
 - do all htmx examples
 - todos to library
-- export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
 
 # Local
 
