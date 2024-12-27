@@ -45,6 +45,33 @@ Component => Component
 - [x] `content 'text/html', "html"`
 - [x] `.render` returns HTML as Str
 
+ASIS:
+lib
+├── Component
+│ └── MyLib.rakumod
+├── Component.rakumod
+└── Cro-Website-Basic
+  ├── Routes
+  │ ├── Happy-TM-Xmas.rakumod   [2]   use Component, Component::MyLib;
+  │ ├── Merry-Cromas.rakumod    [2]
+  │ ├── SHARC.rakumod           [2]   use Component, Component::MyLib;
+  │ └── Todos.rakumod           [2]   use Component;
+  └── Routes.rakumod            [1]   use 2,2,2,2
+
+TOBE:
+lib
+├── Component
+│ └── MyLib.rakumod
+├── Component.rakumod
+└── Cro-Website-Basic
+├── Routes
+│ ├── Happy-TM-Xmas.rakumod   [2]   use Component, Component::MyLib;
+│ ├── Merry-Cromas.rakumod    [2]
+│ ├── SHARC.rakumod           [2]   use Component, Component::MyLib;
+│ └── Todos.rakumod           [2]   use Component;
+└── Routes.rakumod            [1]   use 2,2,2,2
+
+
 # Name
 - sharrc
 
@@ -55,6 +82,11 @@ Component => Component
 - [x] add todos & fix load, etc
 - [x] export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
 - do the full pico table example
+- hone activetable
+  - out to SiteLib
+  - use roles
+  - search as method
+  - data model in Red
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
