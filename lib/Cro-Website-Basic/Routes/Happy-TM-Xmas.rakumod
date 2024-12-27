@@ -1,5 +1,5 @@
 use Component;
-use Component::MyLib;
+use Cro::Website::Basic::SiteLib;
 
 use HTML::Functional :CRO;
 

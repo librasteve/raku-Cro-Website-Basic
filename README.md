@@ -45,31 +45,11 @@ Component => Component
 - [x] `content 'text/html', "html"`
 - [x] `.render` returns HTML as Str
 
-ASIS:
-lib
-├── Component
-│ └── MyLib.rakumod
-├── Component.rakumod
-└── Cro-Website-Basic
-  ├── Routes
-  │ ├── Happy-TM-Xmas.rakumod   [2]   use Component, Component::MyLib;
-  │ ├── Merry-Cromas.rakumod    [2]
-  │ ├── SHARC.rakumod           [2]   use Component, Component::MyLib;
-  │ └── Todos.rakumod           [2]   use Component;
-  └── Routes.rakumod            [1]   use 2,2,2,2
+#### 06-sharrc5
 
-TOBE:
-lib
-├── Component
-│ └── MyLib.rakumod
-├── Component.rakumod
-└── Cro-Website-Basic
-├── Routes
-│ ├── Happy-TM-Xmas.rakumod   [2]   use Component, Component::MyLib;
-│ ├── Merry-Cromas.rakumod    [2]
-│ ├── SHARC.rakumod           [2]   use Component, Component::MyLib;
-│ └── Todos.rakumod           [2]   use Component;
-└── Routes.rakumod            [1]   use 2,2,2,2
+- [x] split MyLib => BaseLib & SiteLib
+
+bring pico table back in from sharrc2/3
 
 
 # Name
