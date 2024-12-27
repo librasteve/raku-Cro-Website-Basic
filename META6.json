@@ -19,8 +19,9 @@
     "build-depends": [],
     "provides": {
         "Component": "lib/Component.rakumod",
-        "Component::MyLib": "lib/Component/MyLib.rakumod",
+        "Component::BaseLib": "lib/Component/BaseLib.rakumod",
         "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",
+        "Cro::Website::Basic::SiteLib": "lib/Cro-Website-Basic/SiteLib.rakumod",
         "Cro::Website::Basic::Routes::SHARC": "lib/Cro-Website-Basic/Routes/SHARC.rakumod",
         "Cro::Website::Basic::Routes::Todos": "lib/Cro-Website-Basic/Routes/Todos.rakumod",
         "Cro::Website::Basic::Routes::Merry-Cromas": "lib/Cro-Website-Basic/Routes/Merry-Cromas.rakumod",

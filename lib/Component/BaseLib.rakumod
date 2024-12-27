@@ -1,9 +1,11 @@
+unit module Component::BaseLib;
+
 use HTML::Functional;    # :CRO exclusions not needed here
 
-my @components = <Results ActiveTable Table Grid>;
+my @components = <Table Grid>;
 #warn self.thead.raku; $*ERR.flush;
 
-role THead {
+role THead is export {
 	has @.thead;
 
 	method thead( --> Str() ) {
@@ -14,7 +16,7 @@ role THead {
 }
 
 #| https://picocss.com/docs/table TODO
-class Table does THead {
+class Table does THead is export {
 	has @.data;
 
 	multi method new(@data, *%h) {
@@ -33,32 +35,8 @@ class Table does THead {
 	}
 }
 
-class ActiveTable does THead {
-	method render {
-		table :class<striped>, [
-			self.thead;
-			tbody :id<search-results>;
-		]
-	}
-}
-
-class Results {
-	has @.results;
-
-	method render {
-		tbody :id<search-results>,
-			do for @!results {
-				tr
-					td .<firstName>,
-					td .<lastName>,
-					td .<email>,
-			}
-		;
-	}
-}
-
 #| https://picocss.com/docs/grid
-class Grid {
+class Grid is export {
 	has @.items;
 
 	multi method new(@items, *%h) {
@@ -108,3 +86,5 @@ my package EXPORT::DEFAULT {
 			}
 	}
 }
+
+my package EXPORT::NONE { }
