@@ -5,8 +5,7 @@ use HTML::Functional;
 use Component;
 use Component::BaseLib :NONE;
 
-my @components = <Results ActiveTable>;
-#warn self.thead.raku; $*ERR.flush;
+my @components = <ActiveTable>;
 
 class Results {
 	has @.results = [];
@@ -29,49 +28,24 @@ class ActiveTable is export {
 	also does Component::BaseLib::THead;
 
 	has UInt $.id = $next++;
-	has Bool $.done is rw = False;
-
 	has Results $.res .= new;
 
-	method toggle {
-		$!done = !$!done
-	}
+	method search(:$needle) {
+		sub check($str) { $str.contains($needle, :i) };
 
-	method apply-del($inner) {   # FIXME rm
-		$!done ?? del $inner !! $inner
-	}
+		my @results = data-at.grep: (
+			*.<firstName>.&check,
+			*.<lastName>.&check,
+			*.<email>.&check,
+		).any;
 
-	method search-at(:$needle) {
-
-		sub search-in($needle) {
-
-			sub check($str) { $str.contains($needle, :i) };
-
-			data-at.grep: (
-				*.<firstName>.&check,
-				*.<lastName>.&check,
-				*.<email>.&check,
-			).any;
-		}
-
-		$!res = Results.new( results => search-in($needle) );
-		render-me $!res;
+		render-me Results.new: :@results;
 	}
 
 	method render {
-		div [
-			input(
-				:type<checkbox>,
-				:checked($!done.so),
-				:hx-target<closest div>,
-				:hx-swap<outerHTML>,
-				:hx-get("/happy_tm_xmas/activetable/$!id/toggle"),
-		    );
-			self.apply-del:
-				table :class<striped>, [
-					self.thead;
-					tbody :id<search-results>;
-				];
+		table :class<striped>, [
+			self.thead;
+			tbody :id<search-results>;
 		];
 	}
 }
