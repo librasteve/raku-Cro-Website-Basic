@@ -28,7 +28,13 @@ class ActiveTable is export {
 	also does Component::BaseLib::THead;
 
 	has UInt $.id = $next++;
+	has $.holder;
+
 	has Results $.res .= new;
+
+	submethod TWEAK {
+		$!holder.append: self;
+	}
 
 	method search(:$needle) {
 		sub check($str) { $str.contains($needle, :i) };
@@ -39,7 +45,7 @@ class ActiveTable is export {
 			*.<email>.&check,
 		).any;
 
-		render-me Results.new: :@results;
+		render Results.new: :@results;
 	}
 
 	method render {

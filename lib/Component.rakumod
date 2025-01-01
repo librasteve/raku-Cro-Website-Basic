@@ -13,19 +13,19 @@ class Component {
 	has $.location = '';
 	has %.components;
 
-	multi method add(*@components) {
-		self.add: $_ for @components
+	multi method add(*@classes) {
+		self.add: $_ for @classes;
 	}
 
 	multi method add(
-		$component is copy,
+		$class is copy,
 		:&load is copy,
 		:delete(&del) is copy,
 		:&create is copy,
 		:&update is copy,
-		:$url-part = $component.^name.split('::').tail.lc,
+		:$url-part = $class.^name.split('::').tail.lc,
 	) {
-		%!components.push: $component.^name => %(:&load, :&delete, :$component);
+		%!components.push: $class.^name => %(:&load, :&delete, :$class);
 
 		post -> $url-part {
 			request-body -> $data {
@@ -37,7 +37,7 @@ class Component {
 		with &load {
 			get -> $url-part, Int $id {
 				my $comp = load $id;
-				render-me $comp;
+				render $comp;
 			}
 
 			delete -> $url-part, Int $id {
@@ -52,9 +52,7 @@ class Component {
 				}
 			} with &update;
 
-			#iamerejh ... think through
-			#also only works once !!
-			for $component.^methods -> $meth {
+			for $class.^methods -> $meth {
 				my $name = $meth.name;
 
 				if $meth.signature.params > 2 {
@@ -75,11 +73,11 @@ class Component {
 	}
 }
 
-sub render-me($comp) is export {
+sub render($comp) is export {
 	content 'text/html', $comp.render;
 }
 
 
-# this partial code extracted from FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a   (Dec 8 2024)
+# this code based on FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a (Dec 8 2024)
 # used here under Artistic 2.0
 # author Fernando Corrêa de Oliveira <fernando.correa@humanstate.com>

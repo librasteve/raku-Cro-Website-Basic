@@ -73,7 +73,7 @@ sub todos-routes() is export {
         my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
 
         get -> {
-            render-me Frame.new: :@todos;
+            render Frame.new: :@todos;
         }
 
         $component.add:
