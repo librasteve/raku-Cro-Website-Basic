@@ -48,7 +48,7 @@ Component => Component
 #### 06-sharrc5
 
 - [x] split MyLib => BaseLib & SiteLib
-- [x] golder pattern
+- [x] holder pattern
 
 bring pico table back in from sharrc2/3
 
