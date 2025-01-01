@@ -1,6 +1,6 @@
 unit module Component::BaseLib;
 
-use HTML::Functional;    # :CRO exclusions not needed here
+use HTML::Functional;
 
 my @components = <Table Grid>;
 #warn self.thead.raku; $*ERR.flush;

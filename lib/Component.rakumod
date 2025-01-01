@@ -23,49 +23,51 @@ class Component {
 		:delete(&del) is copy,
 		:&create is copy,
 		:&update is copy,
-		:$url-part = $component.^name.lc,
+		:$url-part = $component.^name.split('::').tail.lc,
 	) {
 		%!components.push: $component.^name => %(:&load, :&delete, :$component);
 
-		post -> Str $ where $url-part {
+		post -> $url-part {
 			request-body -> $data {
 				my $new = create |$data.pairs.Map;
-				redirect "/{$!location}/{$url-part}/{ $new.id }", :see-other
+				redirect "/{$!location}/{$url-part}/{$new.id}", :see-other
 			}
 		}
 
 		with &load {
-			get -> Str $ where $url-part, $id {
+			get -> $url-part, Int $id {
 				my $comp = load $id;
 				render-me $comp;
 			}
 
-			delete -> Str $ where $url-part, $id {
+			delete -> $url-part, Int $id {
 				del $id;
 				content 'text/html', ""
 			} with &del;
 
-			put -> Str $ where $url-part, $id {
+			put -> $url-part, Int $id {
 				request-body -> $data {
 					my $comp = load $id;
 					update $comp, |$data.pairs.Map
 				}
 			} with &update;
 
+			#iamerejh ... think through
+			#also only works once !!
 			for $component.^methods -> $meth {
 				my $name = $meth.name;
 
 				if $meth.signature.params > 2 {
-					put -> Str $ where $url-part, $id, Str $name {
+					put -> $url-part, Int $id, Str $name {
 						request-body -> $data {
-							load($id)."$name"(|$data.pairs.Map);
-							redirect "/{$!location}/{ $url-part }/{ $id }", :see-other
+							my $comp = load $id;
+							$comp."$name"(|$data.pairs.Map);
 						}
 					}
 				} else {
-					get -> Str $ where $url-part, $id, Str $name {
-						load($id)."$name"();
-						redirect "/{$!location}/{ $url-part }/{ $id }", :see-other
+					get -> $url-part, Int $id, Str $name {
+						my $comp = load $id;
+						$comp."$name"();
 					}
 				}
 			}
@@ -73,8 +75,8 @@ class Component {
 	}
 }
 
-sub render-me($component) is export {
-	content 'text/html', $component.render;
+sub render-me($comp) is export {
+	content 'text/html', $comp.render;
 }
 
 

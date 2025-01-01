@@ -61,12 +61,13 @@ bring pico table back in from sharrc2/3
 - [x] add non-fragment HTMX example, xmassify - active search
 - [x] add todos & fix load, etc
 - [x] export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
-- do the full pico table example
-- hone activetable
-  - out to SiteLib
+- [ ] hone activetable
+  - [x] out to SiteLib
   - use roles
   - search as method
   - data model in Red
+  - user session
+- do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
