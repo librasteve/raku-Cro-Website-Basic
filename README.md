@@ -63,8 +63,8 @@ bring pico table back in from sharrc2/3
 - [x] export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
 - [ ] hone activetable
   - [x] out to SiteLib
-  - use roles
-  - search as method
+  - [ ] use roles
+  - [x] search as method
   - data model in Red
   - user session
 - do the full pico table example
