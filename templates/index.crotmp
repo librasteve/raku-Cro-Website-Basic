@@ -30,7 +30,7 @@
         <li><a hx-get="/merry_cromas">Tree Me</a></li>
         <li><a hx-get="/happy_tm_xmas"><b>H</b>appy<b>&trade;&nbsp;X</b>mas</a></li>
         <li><a hx-get="/todos">todos</a></li>
-        <li><a hx-get="/sharc">sharc</a></li>
+        <li><a hx-get="/sharc">sharrc</a></li>
         <?.dark-mode>
           <li><a href="/light-mode">
             <i class="fas fa-sun"></i>
