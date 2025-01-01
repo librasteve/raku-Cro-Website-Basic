@@ -39,7 +39,7 @@ merge latest Component xxx
 
 #### 05-sharrc4 (from 04-sharrc3)
 
-Component => Component
+Cromponent => Component
 
 - [x] No Cro templates
 - [x] `content 'text/html', "html"`
@@ -62,12 +62,12 @@ bring pico table back in from sharrc2/3
 - [x] add non-fragment HTMX example, xmassify - active search
 - [x] add todos & fix load, etc
 - [x] export set ('sharrc' ?) of HTML::Functional to drop dupes (table, thead, etc...)
-- [ ] hone activetable
+- [x] hone activetable
   - [x] out to SiteLib
-  - [ ] use roles
+  - [x] use roles
   - [x] search as method
+  - [x] adjust Todo toggle
   - data model in Red
-  - user session
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu

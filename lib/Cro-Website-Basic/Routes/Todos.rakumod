@@ -10,7 +10,8 @@ class Todo {
     has Str  $.data is required;
 
     method toggle {
-        $!done = !$!done
+        $!done = !$!done;
+        render self;
     }
 
     method render {
