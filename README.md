@@ -48,12 +48,13 @@ Component => Component
 #### 06-sharrc5
 
 - [x] split MyLib => BaseLib & SiteLib
+- [x] golder pattern
 
 bring pico table back in from sharrc2/3
 
 
 # Name
-- sharrc
+- !sharrc  (too similar to Sparky)
 
 
 # TODOs

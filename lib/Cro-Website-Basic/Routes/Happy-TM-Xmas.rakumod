@@ -4,9 +4,10 @@ use Cro::Website::Basic::SiteLib;
 
 use HTML::Functional :CRO;
 
-my $component = Component.new: :location<happy_tm_xmas>;
+my $location = 'happy_tm_xmas';
+my $component = Component.new: :$location;
 
-sub index($at) {
+sub index(@ats) {
     div [
         h3 [
             'Search Names',
@@ -21,9 +22,9 @@ sub index($at) {
               :hx-swap<outerHTML>,
               :hx-indicator<.htmx-indicator>;
 
-        div $at.render;
+        div @ats[0].render;
 
-#        activetable :thead<Given Elven Elfmail>;
+        activetable :thead<First Last Email>, holder => $@ats;
     ];
 }
 
@@ -33,15 +34,15 @@ use Cro::WebApp::Template;
 
 sub happy_tm_xmas-routes() is export {
     route {
-        my $at = ActiveTable.new: :thead<First Last Email>;
+        my @ats = [ActiveTable.new: :thead<First Last Email>];
 
         $component.add:
             ActiveTable,
-            :load( -> UInt() $id {$at} );  # FIXME ignores id (only one)
+            :load( -> UInt() $id { @ats.first: { .id == $id } }),
         ;
 
         get -> {
-            content 'text/html', index($at);
+            content 'text/html', index(@ats);
         }
     }
 }
