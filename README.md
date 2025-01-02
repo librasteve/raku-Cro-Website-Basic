@@ -50,11 +50,20 @@ Cromponent => Component
 - [x] split MyLib => BaseLib & SiteLib
 - [x] holder pattern
 
+#### 07-Red
+
+spike to try Red
+not working
+try Cro-Red module (see begumpura design)
+
+
+
 bring pico table back in from sharrc2/3
 
 
 # Name
 - !sharrc  (too similar to Sparky)
+- Ait or Cay
 
 
 # TODOs
@@ -67,13 +76,13 @@ bring pico table back in from sharrc2/3
   - [x] use roles
   - [x] search as method
   - [x] adjust Todo toggle
-  - data model in Red
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
 - language switcher
 - sitemap & robots.txt
+- data model in Red (bring back 07-Red begumpura)
 - do all pico examples https://picocss.com/docs/
 - do all htmx examples
 - todos to library
@@ -84,9 +93,10 @@ bring pico table back in from sharrc2/3
 
 Install raku - eg. from [rakubrew](https://rakubrew.org), then:
 
-### Install Cro
+### Install Cro & Red
 - `zef install --/test cro`
 - `zef install Cro::WebApp`
+- `zef install Red --exclude="pq:ver<5>"`
 
 ### Install this repo
 - `git clone https://github.com/librasteve/raku-Cro-Website-Basic.git`

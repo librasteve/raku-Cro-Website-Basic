@@ -1,4 +1,4 @@
-unit module Cro-Website-Basic::SiteLib;
+#unit module Cro-Website-Basic::SiteLib;
 
 use HTML::Functional;
 
@@ -6,6 +6,26 @@ use Component;
 use Component::BaseLib :NONE;
 
 my @components = <ActiveTable>;
+
+use Red:api<2>;
+
+# Define the data model
+model Person {
+	has Int      $.id         is serial;
+	has Str      $.firstName  is column;
+	has Str      $.lastName   is column;
+	has Str      $.email      is column;
+	has Str      $.city       is column;
+}
+
+# Apply migrations to the database
+my $*RED-DB = database "SQLite";
+Person.^create-table;     #iamerejh
+
+#my $person = Person.create(firstName=>"Venus", lastName=>"Grimes");
+#dd $person;
+
+#die;
 
 class Results {
 	has @.results = [];
@@ -37,16 +57,26 @@ class ActiveTable is export {
 	}
 
 	method search(:$needle) {
-		sub check($str) { $str.contains($needle, :i) };
+		sub check($col) { Person.where({ $col.ilike("%$needle%") }) }
 
-		my @results = data-at.grep: (
-			*.<firstName>.&check,
-			*.<lastName>.&check,
-			*.<email>.&check,
-		).any;
+		my @results = Person.where({
+			(check($.firstName) | check($.lastName) | check($.email))
+		}).all;
 
 		render Results.new: :@results;
 	}
+
+#	method search(:$needle) {
+#		sub check($str) { $str.contains($needle, :i) };
+#
+#		my @results = data-at.grep: (
+#			*.<firstName>.&check,
+#			*.<lastName>.&check,
+#			*.<email>.&check,
+#		).any;
+#
+#		render Results.new: :@results;
+#	}
 
 	method render {
 		table :class<striped>, [
@@ -56,10 +86,21 @@ class ActiveTable is export {
 	}
 }
 
+#`[
+# Parse JSON and create `Person` records
+my $data = json-data;
+
+for $data -> %record {
+	Person.create(|%record);  # Use hash flattening to pass keys as arguments
+}
+
+# Verify records were created
+#say Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", ");
+
 # TODO convert to Red
 use JSON::Fast;
 
-sub data-at() {
+sub json-data {
 	from-json q:to/END/;
     [
         {"firstName": "Venus", "lastName": "Grimes", "email": "lectus.rutrum@Duisa.edu", "city": "Ankara"},
@@ -165,6 +206,7 @@ sub data-at() {
     ]
     END
 }
+#]
 
 ##### HTML Functional Export #####
 
