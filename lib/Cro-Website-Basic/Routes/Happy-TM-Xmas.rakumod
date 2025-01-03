@@ -13,7 +13,7 @@ my $holder = [];
 
 sub index {
     div [
-        searchtable :thead<First Last Email>, :title("Search Table"), :$holder, :$location;
+        searchtable :thead<First Last Email>, :title("Search People"), :$holder, :$location;
     ]
 }
 
