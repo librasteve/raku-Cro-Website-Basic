@@ -1,5 +1,3 @@
-#unit module Cro-Website-Basic::SiteLib;
-
 use HTML::Functional;
 
 use Component;
@@ -10,7 +8,7 @@ my @components = <ActiveTable>;
 use Red:api<2>;
 
 # Define the data model
-model Person {
+model Person is nullable is table<person> {
 	has Int      $.id         is serial;
 	has Str      $.firstName  is column;
 	has Str      $.lastName   is column;
@@ -18,14 +16,13 @@ model Person {
 	has Str      $.city       is column;
 }
 
-# Apply migrations to the database
-my $*RED-DB = database "SQLite";
+red-defaults “SQLite”;
+
 Person.^create-table;     #iamerejh
 
-#my $person = Person.create(firstName=>"Venus", lastName=>"Grimes");
-#dd $person;
+my $person = Person.^create(firstName => "Fernando");
+dd $person;
 
-#die;
 
 class Results {
 	has @.results = [];
@@ -34,9 +31,9 @@ class Results {
 		tbody :id<search-results>,
 			do for @!results {
 				tr
-					td .<firstName>,
-					td .<lastName>,
-					td .<email>,
+					td .firstName,
+					td .lastName,
+					td .email,
 			}
 		;
 	}
@@ -57,26 +54,15 @@ class ActiveTable is export {
 	}
 
 	method search(:$needle) {
-		sub check($col) { Person.where({ $col.ilike("%$needle%") }) }
 
-		my @results = Person.where({
-			(check($.firstName) | check($.lastName) | check($.email))
-		}).all;
+		my @results = Person.^all.grep( {
+			$_.firstName.contains($needle) ||
+			$_.lastName.contains($needle)  ||
+			$_.email.contains($needle)
+		} );
 
 		render Results.new: :@results;
 	}
-
-#	method search(:$needle) {
-#		sub check($str) { $str.contains($needle, :i) };
-#
-#		my @results = data-at.grep: (
-#			*.<firstName>.&check,
-#			*.<lastName>.&check,
-#			*.<email>.&check,
-#		).any;
-#
-#		render Results.new: :@results;
-#	}
 
 	method render {
 		table :class<striped>, [
@@ -86,18 +72,15 @@ class ActiveTable is export {
 	}
 }
 
-#`[
-# Parse JSON and create `Person` records
-my $data = json-data;
 
-for $data -> %record {
-	Person.create(|%record);  # Use hash flattening to pass keys as arguments
+for json-data() -> %record {
+	Person.^create(|%record);
 }
 
 # Verify records were created
-#say Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", ");
+#warn Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", "); $*ERR.flush;
 
-# TODO convert to Red
+
 use JSON::Fast;
 
 sub json-data {
@@ -206,7 +189,6 @@ sub json-data {
     ]
     END
 }
-#]
 
 ##### HTML Functional Export #####
 
