@@ -3,7 +3,7 @@ use HTML::Functional;
 use Component;
 use Component::BaseLib :NONE;
 
-my @components = <ActiveTable>;
+my @components = <SearchTable>;
 
 use Red:api<2>;
 
@@ -16,15 +16,14 @@ model Person {
 }
 
 red-defaults “SQLite”;
-
-Person.^create-table;     #iamerejh
+Person.^create-table;
 
 class Results {
-	has @.results = [];
+	has @.data is rw = [];
 
 	method render {
 		tbody :id<search-results>,
-			do for @!results {
+			do for @!data {
 				tr
 					td .firstName,
 					td .lastName,
@@ -34,15 +33,42 @@ class Results {
 	}
 }
 
+class SearchBox {
+	has $.title;
+	has $.location;
+	has $.url-path;
+	has $.indi-img  = '/img/bars.svg';
+	has $.indi-text = '  Searching...';
+	has $.placeholder = 'Begin typing to search...';
+
+	method render { [
+		h3 [
+			$!title,
+			span :class<htmx-indicator>, [img :src($!indi-img); $!indi-text]
+		];
+
+		input :type<search>, :name<needle>,
+			:$!placeholder,
+			:hx-put($!url-path),
+			:hx-trigger<keyup changed delay:500ms, search>,
+			:hx-target<#search-results>,
+			:hx-swap<outerHTML>,
+			:hx-indicator<.htmx-indicator>;
+	] }
+}
+
 my UInt $next = 1;
 
-class ActiveTable is export {
+class SearchTable is export {
 	also does Component::BaseLib::THead;
 
 	has UInt $.id = $next++;
 	has $.holder;
+	has $.location;
+	has $.title = 'Search';
 
-	has Results $.res .= new;
+	has SearchBox $.searchbox .= new: :$!title, :url-path("/$!location/searchtable/$!id/search");
+	has Results   $.results   .= new;
 
 	submethod TWEAK {
 		$!holder.append: self;
@@ -50,21 +76,23 @@ class ActiveTable is export {
 
 	method search(:$needle) {
 
-		my @results = Person.^all.grep( {
-			$_.firstName.contains($needle) ||
-			$_.lastName.contains($needle)  ||
-			$_.email.contains($needle)
-		} );
+		$!results.data = Person.^all.grep: {
+			$_.firstName.fc.contains($needle.fc) ||
+			$_.lastName.fc.contains($needle.fc)  ||
+			$_.email.fc.contains($needle.fc)
+		};
 
-		render Results.new: :@results;
+		render $!results;
 	}
 
-	method render {
+	method render {[
+		$!searchbox.render;
+
 		table :class<striped>, [
 			self.thead;
 			tbody :id<search-results>;
 		];
-	}
+	] }
 }
 
 
