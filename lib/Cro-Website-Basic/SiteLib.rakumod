@@ -7,8 +7,7 @@ my @components = <ActiveTable>;
 
 use Red:api<2>;
 
-# Define the data model
-model Person is nullable is table<person> {
+model Person {
 	has Int      $.id         is serial;
 	has Str      $.firstName  is column;
 	has Str      $.lastName   is column;
@@ -19,10 +18,6 @@ model Person is nullable is table<person> {
 red-defaults “SQLite”;
 
 Person.^create-table;     #iamerejh
-
-my $person = Person.^create(firstName => "Fernando");
-dd $person;
-
 
 class Results {
 	has @.results = [];
@@ -79,7 +74,6 @@ for json-data() -> %record {
 
 # Verify records were created
 #warn Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", "); $*ERR.flush;
-
 
 use JSON::Fast;
 

@@ -77,6 +77,7 @@ bring pico table back in from sharrc2/3
   - [x] search as method
   - [x] adjust Todo toggle
   - [x] data model in Red
+  - [ ] make Red grep case insensitive
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
