@@ -18,21 +18,6 @@ model Person {
 red-defaults “SQLite”;
 Person.^create-table;
 
-class Results {
-	has @.data is rw = [];
-
-	method render {
-		tbody :id<search-results>,
-			do for @!data {
-				tr
-					td .firstName,
-					td .lastName,
-					td .email,
-			}
-		;
-	}
-}
-
 class SearchBox {
 	has $.title;
 	has $.location;
@@ -57,14 +42,30 @@ class SearchBox {
 	] }
 }
 
+class Results {
+	has @.data is rw = [];
+
+	method render {
+		tbody :id<search-results>,
+			do for @!data {
+				tr
+					td .firstName,
+					td .lastName,
+					td .email,
+			}
+		;
+	}
+}
+
 my UInt $next = 1;
 
 class SearchTable is export {
 	also does Component::BaseLib::THead;
 
 	has UInt $.id = $next++;
-	has $.holder;
-	has $.location;
+	has $.holder   is required;
+	has $.location is required;
+
 	has $.title = 'Search';
 
 	has SearchBox $.searchbox .= new: :$!title, :url-path("/$!location/searchtable/$!id/search");
@@ -75,7 +76,6 @@ class SearchTable is export {
 	}
 
 	method search(:$needle) {
-
 		$!results.data = Person.^all.grep: {
 			$_.firstName.fc.contains($needle.fc) ||
 			$_.lastName.fc.contains($needle.fc)  ||
@@ -104,7 +104,6 @@ for json-data() -> %record {
 #warn Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", "); $*ERR.flush;
 
 use JSON::Fast;
-
 sub json-data {
 	from-json q:to/END/;
     [

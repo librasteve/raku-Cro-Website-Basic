@@ -86,6 +86,7 @@ bring pico table back in from sharrc2/3
 - do all pico examples https://picocss.com/docs/
 - do all htmx examples
 - todos to library
+- `is functional` trait
 
 # Local
 
