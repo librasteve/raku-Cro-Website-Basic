@@ -52,9 +52,7 @@ Cromponent => Component
 
 #### 07-Red
 
-spike to try Red
-not working
-try Cro-Red module (see begumpura design)
+searchtable with red data
 
 
 
