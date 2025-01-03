@@ -85,7 +85,7 @@ class SearchTable is export {
 		render $!results;
 	}
 
-	method render {[
+	method render { [
 		$!searchbox.render;
 
 		table :class<striped>, [
