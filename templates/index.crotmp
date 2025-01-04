@@ -24,13 +24,12 @@
   <header class="container"">
     <nav>
       <ul>
-        <li><a class="logo" href="/">Merry <b>Cromas</b></a></li>
+        <li><a class="logo" href="/">HTML::<b>Functional</b></a></li>
       </ul>
       <ul hx-target="#content">
-        <li><a hx-get="/merry_cromas">Tree Me</a></li>
-        <li><a hx-get="/happy_tm_xmas"><b>H</b>appy<b>&trade;&nbsp;X</b>mas</a></li>
+        <li><a hx-get="/searchtable">searchtable</a></li>
         <li><a hx-get="/todos">todos</a></li>
-        <li><a hx-get="/sharc">sharrc</a></li>
+        <li><a hx-get="/baseexamples">baseexamples</a></li>
         <?.dark-mode>
           <li><a href="/light-mode">
             <i class="fas fa-sun"></i>

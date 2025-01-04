@@ -18,7 +18,7 @@ my $template =
 use Cro::HTTP::Router;
 use Cro::WebApp::Template;
 
-sub sharc-routes() is export {
+sub baseexamples-routes() is export {
 
     route {
         get -> {
