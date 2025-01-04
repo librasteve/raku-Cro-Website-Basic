@@ -33,14 +33,11 @@ sub routes() is export {
             template 'index.crotmp', { :light-mode };
         }
 
-        use Cro::Website::Basic::Routes::Merry-Cromas;
-        include merry_cromas => merry_cromas-routes;
+        use Cro::Website::Basic::Routes::SearchTable;
+        include searchtable => searchtable-routes;
 
-        use Cro::Website::Basic::Routes::Happy-TM-Xmas;
-        include happy_tm_xmas => happy_tm_xmas-routes;
-
-        use Cro::Website::Basic::Routes::SHARC;
-        include sharc => sharc-routes;
+        use Cro::Website::Basic::Routes::BaseExamples;   #iamerejh
+        include baseexamples => baseexamples-routes;
 
         use Cro::Website::Basic::Routes::Todos;
         include todos => todos-routes;

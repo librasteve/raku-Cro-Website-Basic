@@ -6,7 +6,7 @@ use Cro::Website::Basic::SiteLib;
 
 use HTML::Functional :CRO;
 
-my $location = 'happy_tm_xmas';
+my $location = 'searchtable';
 my $component = Component.new: :$location;
 my $holder = [];
 
@@ -16,7 +16,7 @@ sub index {
     ]
 }
 
-sub happy_tm_xmas-routes() is export {
+sub searchtable-routes() is export {
     route {
         $component.add:
             SearchTable,

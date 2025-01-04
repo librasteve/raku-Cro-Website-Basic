@@ -24,58 +24,18 @@ go for maximally decomposed apps
 Merry Xmas site with pico root overloaded for scale
 Dark / light implemented via site reload
 
-#### 02-sharc1
-
-add Component (pre macro)
-HTML focus - low integration SASS
-
-#### 03-sharc2
-
-add Todos
-
-#### 04-sharrc3
-
-merge latest Component xxx
-
-#### 05-sharrc4 (from 04-sharrc3)
-
-Cromponent => Component
-
-- [x] No Cro templates
-- [x] `content 'text/html', "html"`
-- [x] `.render` returns HTML as Str
-
-#### 06-sharrc5
-
-- [x] split MyLib => BaseLib & SiteLib
-- [x] holder pattern
-
-#### 07-Red
+#### 02-red-searchtable
 
 searchtable with red data
 
+#### 03-ait
 
-
-bring pico table back in from sharrc2/3
-
-
-# Name
-- !sharrc  (too similar to Sparky)
-- Ait or Cay
+bring pico table back in
 
 
 # TODOs
-- [x] $topic var to handle multiple component instances
-- [x] add non-fragment HTMX example, xmassify - active search
-- [x] add todos & fix load, etc
-- [x] export set of HTML::Functional to drop dupes (table, thead, etc...)
-- [x] hone searchtable
-  - [x] out to SiteLib
-  - [x] use roles
-  - [x] search as method
-  - [x] adjust Todo toggle
-  - [x] data model in Red
-  - [x] make Red grep case insensitive
+- [ ] rm xmas & baubles
+
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu

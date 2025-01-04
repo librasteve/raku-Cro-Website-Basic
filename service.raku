@@ -1,5 +1,6 @@
 use Cro::HTTP::Log::File;
 use Cro::HTTP::Server;
+
 use Cro::Website::Basic::Routes;
 
 my Cro::Service $http = Cro::HTTP::Server.new(
@@ -13,6 +14,7 @@ my Cro::Service $http = Cro::HTTP::Server.new(
         Cro::HTTP::Log::File.new(logs => $*OUT, errors => $*ERR)
     ]
 );
+
 $http.start;
 say "Listening at http://%*ENV<WEBSITE_HOST>:%*ENV<WEBSITE_PORT>";
 react {
