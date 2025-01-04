@@ -6,7 +6,7 @@ use HTML::Functional :CRO;
 my $template =
     h3 'Table',
     div [
-        table $[[1, 2], [3, 4]]  #, :thead<Left Right>;
+        table $[[1, 2], [3, 4]]  , :thead<Left Right>;
     ],
     hr,
     h3 'Grid',
@@ -18,7 +18,7 @@ my $template =
 use Cro::HTTP::Router;
 use Cro::WebApp::Template;
 
-sub sharc-routes() is export {
+sub baseexamples-routes() is export {
 
     route {
         get -> {
