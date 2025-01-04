@@ -27,7 +27,7 @@ Dark / light implemented via site reload
 #### 02-sharc1
 
 add Component (pre macro)
-HTML focus - low integration SASS
+HTML focus - low integration SASS 
 
 #### 03-sharc2
 
