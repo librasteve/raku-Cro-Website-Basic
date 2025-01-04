@@ -28,13 +28,13 @@ Dark / light implemented via site reload
 
 searchtable with red data
 
-#### 03-ait
+#### 03-ait-baseexamples
 
 bring pico table back in
 
 
 # TODOs
-- [ ] rm xmas & baubles
+- [x] rm xmas & baubles
 
 - do the full pico table example
 - push pico/func up the stack (head, nav and so on)
