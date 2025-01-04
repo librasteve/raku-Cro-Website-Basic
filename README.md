@@ -87,6 +87,7 @@ bring pico table back in from sharrc2/3
 - do all htmx examples
 - todos to library
 - `is functional` trait
+- docs maker from Red
 
 # Local
 

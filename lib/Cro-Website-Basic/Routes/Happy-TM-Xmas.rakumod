@@ -8,7 +8,6 @@ use HTML::Functional :CRO;
 
 my $location = 'happy_tm_xmas';
 my $component = Component.new: :$location;
-
 my $holder = [];
 
 sub index {

@@ -20,7 +20,6 @@ Person.^create-table;
 
 class SearchBox {
 	has $.title;
-	has $.location;
 	has $.url-path;
 	has $.indi-img  = '/img/bars.svg';
 	has $.indi-text = '  Searching...';
@@ -32,8 +31,7 @@ class SearchBox {
 			span :class<htmx-indicator>, [img :src($!indi-img); $!indi-text]
 		];
 
-		input :type<search>, :name<needle>,
-			:$!placeholder,
+		input :type<search>, :name<needle>, :$!placeholder,
 			:hx-put($!url-path),
 			:hx-trigger<keyup changed delay:500ms, search>,
 			:hx-target<#search-results>,
