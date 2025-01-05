@@ -2,9 +2,9 @@
 
 Dear SmokeMachine
 
-I am impressed with the work you have been doing with Cromponents, there are many areas that I agree we need a library like this to power up Cro.
+I am impressed with the work you have been doing with Cromponents, there are many areas that I agree with. We definitely need a library like this to power up Cro.
 
-Here are the things I like:
+Here are some of the things I like:
 
 - easy to write components in crotmp
 - nestable components
@@ -14,9 +14,9 @@ Here are the things I like:
 - potential to have MVC model with LOB (ie data model in Red)
 - methods as component actions
 
-I have had some frustrations with the flexibility of the earlier Cromponent implementations - partly I think this is my learning curve and lack of examples. So I hope that this is reduced and I think that stashing the added components in the Cro Routes sounds like a good strategy fo dealing with included routed (though I have not tried it yet).
+As mentioned on cro-irc, I have had some frustrations with the earlier Cromponent implementations - partly I think this is my learning curve and lack of examples. So I hope that this is reduced and I think that stashing the added components in the Cro Routes sounds like a good strategy fo dealing with included routes (though I have not tried it yet).
 
-In my previous feedback, I have mentioned that I would like to be able to build Cro components directly in raku code with the HTML::Functional library. This feedback has been poorly formed because my ideas of what I have wanted have been also in very early stages of formation - so apologies for any lack of clarity.
+In my previous feedback, I have mentioned that I would like to be able to build Cro components directly in raku code with the HTML::Functional library instead of with crotmp. My feedback has been poorly formed because my ideas of what I have wanted have been also in very early stages of formation - so apologies for any lack of clarity.
 
 This repo is my attempt in the last two weeks to elaborate what I think is the set of features of a Component module to support the coding style that I seek - hopefully Cromponent can be adjusted to make this style possible in addition to the crotmp style. I would encourage you to start the server on your machine (see Getting Started info below to get a feel for what I am doing, especially with Pico CSS and SASS)
 
