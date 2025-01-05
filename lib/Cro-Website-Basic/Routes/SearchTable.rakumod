@@ -28,5 +28,3 @@ sub searchtable-routes() is export {
         }
     }
 }
-
-
