@@ -66,7 +66,8 @@ class SearchTable is export {
 
 	has $.title = 'Search';
 
-	has SearchBox $.searchbox .= new: :$!title, :url-path("/$!location/searchtable/$!id/search");
+	has SearchBox $.searchbox .= new:
+			:$!title, :url-path("/$!location/searchtable/$!id/search");
 	has Results   $.results   .= new;
 
 	submethod TWEAK {
@@ -74,23 +75,28 @@ class SearchTable is export {
 	}
 
 	method search(:$needle) {
+
+		sub check($_) { .fc.contains($needle.fc) }
+
 		$!results.data = Person.^all.grep: {
-			$_.firstName.fc.contains($needle.fc) ||
-			$_.lastName.fc.contains($needle.fc)  ||
-			$_.email.fc.contains($needle.fc)
+			$_.firstName.&check ||
+			$_.lastName.&check  ||
+			$_.email.&check
 		};
 
 		render $!results;
 	}
 
-	method render { [
-		$!searchbox.render;
+	method render {
+		[
+			$!searchbox.render;
 
-		table :class<striped>, [
-			self.thead;
-			tbody :id<search-results>;
-		];
-	] }
+			table :class<striped>, [
+				self.thead;
+				tbody :id<search-results>;
+			];
+		]
+	}
 }
 
 
