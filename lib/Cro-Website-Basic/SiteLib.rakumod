@@ -1,7 +1,9 @@
 use HTML::Functional;
 
-use Component;
-use Component::BaseLib :NONE;
+#use Component;
+#use Component::BaseLib :NONE;
+
+use Cromponent;
 
 my @components = <SearchTable>;
 
@@ -35,7 +37,7 @@ class SearchBox {
 	has $.indi-text = '  Searching...';
 	has $.placeholder = 'Begin typing to search...';
 
-	method render { [
+	method RESPOND { [
 		h3 [
 			$!title,
 			span :class<htmx-indicator>, [img :src($!indi-img); $!indi-text]
@@ -53,7 +55,7 @@ class SearchBox {
 class Results {
 	has @.data is rw = [];
 
-	method render {
+	method RESPOND {
 		tbody :id<search-results>,
 			do for @!data {
 				tr
@@ -67,47 +69,111 @@ class Results {
 
 my UInt $next = 1;
 
-class SearchTable is export {
-	also does Component::BaseLib::THead;
+#class SearchTable is export {
+#	also does Component::BaseLib::THead;
 
-	has UInt $.id = $next++;
-	has $.holder   is required;
-	has $.location is required;
+class SearchTable does Cromponent {
+	my UInt $next-id = 1;
+	my %holder;
+	has $.base;
 
+	has $.id = $next-id++;
 	has $.title = 'Search';
 
-	has SearchBox $.searchbox .= new:
-			:$!title, :url-path("/$!location/searchtable/$!id/search");
-	has Results   $.results   .= new;
+	#iamerejh holder
 
-	submethod TWEAK {
-		$!holder.append: self;
-	}
+#	has SearchBox $.searchbox .= new:
+#			:$!title, :url-path("/$!location/searchtable/$!id/search");
+#	has Results   $.results   .= new;
 
-	method search(:$needle) {
+	submethod TWEAK(|) { %holder{$!id} = self }
 
-		sub check($_) { .fc.contains($needle.fc) }
+	method BASE { $!base }
+	method LOAD($id) { %holder{$id} }
 
-		$!results.data = Person.^all.grep: {
-			$_.firstName.&check ||
-			$_.lastName.&check  ||
-			$_.email.&check
-		};
+	method all { %holder.values }
 
-		render $!results;
-	}
+#	method search(:$needle) {
+#
+#		sub check($_) { .fc.contains($needle.fc) }
+#
+#		$!results.data = Person.^all.grep: {
+#			$_.firstName.&check ||
+#			$_.lastName.&check  ||
+#			$_.email.&check
+#		};
+#
+#		render $!results;
+#	}
 
-	method render {
+	method RESPOND {
 		[
-			$!searchbox.render;
+#			$!searchbox.RESPOND;
 
 			table :class<striped>, [
-				self.thead;
+#				self.thead;
 				tbody :id<search-results>;
 			];
 		]
 	}
 }
+
+#`[[
+class SearchTable does Cromponent {
+	my UInt $next-id = 1;
+	my %holder;
+
+	has UInt $.id = $next-id++;
+
+	has $.title = 'Search';
+
+	#	has SearchBox $.searchbox .= new:
+	#		:$!title, :url-path("/searchtable/$!id/search");
+
+	#	has Results   $.results   .= new;
+
+	method TWEAK(|) { %holder{$!id} = self }
+
+	method LOAD($id) { %holder{$id} }
+
+	method all { %holder.values }
+
+	#	method booboo is accessible {
+	#		warn 'booboo'; $*ERR.flush;
+	#	}
+
+	#	method search(:$needle) is accessible {
+	#
+	#		sub check($_) { .fc.contains($needle.fc) }
+	#
+	#		$!results.data = Person.^all.grep: {
+	#			$_.firstName.&check ||
+	#			$_.lastName.&check  ||
+	#			$_.email.&check
+	#		};
+	#
+	#		render $!results;
+	#	}
+
+	method RENDER {
+		[
+			#			$!searchbox.render;
+			searchbox; :$!title; #, :url-path("/searchtable/$!id/search");
+
+			table :class<striped>, [
+				#				self.thead;
+				#				tbody :id<search-results>;
+				table $[[1, 2], [3, 4]];
+			];
+		]
+	}
+}
+#]]
+
+sub EXPORT() {
+	SearchTable.^exports
+}
+
 
 ##### HTML Functional Export #####
 
@@ -120,7 +186,7 @@ my package EXPORT::DEFAULT {
 
 		OUR::{'&' ~ $name.lc} :=
 			sub (*@a, *%h) {
-				::($name).new( |@a, |%h ).render;
+				::($name).new( |@a, |%h ).RESPOND;
 			}
 	}
 }

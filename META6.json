@@ -19,6 +19,7 @@
     ],
     "build-depends": [],
     "provides": {
+        "Cromponent": "lib/Cromponent.rakumod",
         "Component": "lib/Component.rakumod",
         "Component::BaseLib": "lib/Component/BaseLib.rakumod",
         "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",

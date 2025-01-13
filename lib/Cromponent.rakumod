@@ -100,6 +100,7 @@ sub comp($code, $name) {
 }
 
 role Cromponent {
+
 	my $name = ::?CLASS.^name;
 	::?CLASS.HOW does my role ExportMethod {
 		method add-cromponent-routes(
@@ -108,7 +109,9 @@ role Cromponent {
 			:delete(&del) is copy,
 			:&create      is copy,
 			:&update      is copy,
-			:$url-part = $component.^name.lc,
+			:&base        is copy;    # FIXME rethink location eg html base tag
+#			:$url-part = $component.^name.lc,
+			:$url-part = $component.^name.split('::').tail.lc,  # FIXME subst :: to -
 			:$macro    = $component.HOW.?is-macro($component) // False,
 		) is export {
 			my $cmp-name = $component.^name;
@@ -118,6 +121,7 @@ role Cromponent {
 			}
 			my $route-set := $*CRO-ROUTE-SET;
 
+			&base   //=                { $component.BASE           } if $component.^can: "BASE";
 			&load   //= -> $id         { $component.LOAD: $id      } if $component.^can: "LOAD";
 			&create //= -> *%pars      { $component.CREATE: |%pars } if $component.^can: "CREATE";
 			&del    //= -> $id         { load($id).DELETE          } if $component.^can: "DELETE";
@@ -127,14 +131,16 @@ role Cromponent {
 				my &LOAD = -> $id {
 					my $obj = load $id;
 					die "Cromponent '$cmp-name' could not be loaded with id '$id'" without $obj;
-					$obj
+#					$obj
+					respond $obj;
 				}
 				with &create {
 					note "adding POST $url-part";
 					post -> Str $ where $url-part {
 						request-body -> $data {
 							my $new = create |$data.pairs.Map;
-							redirect "$url-part/{ $new.id }", :see-other
+#							redirect "$url-part/{ $new.id }", :see-other
+							redirect "/{&base}/{$url-part}/{$new.id}", :see-other # FIXME
 						}
 					}
 				}
@@ -185,21 +191,25 @@ role Cromponent {
 			}
 		}
 		method exports(Mu:U $class) {
-			my Str $compiled = $class.&compile-cromponent;
-			my $name = $class.^name;
-			my &compiled = comp $compiled, $name;
-			do if $class.HOW.?is-macro: $class {
-				Map.new: (
-					'&__TEMPLATE_MACRO__' ~ $name => sub (&body, |c) {
-						compiled.(&body, $class.new: |c)
-					}
-				)
+			if $class.^can: "RENDER" {
+				my Str $compiled = $class.&compile-cromponent;
+				my $name = $class.^name;
+				my &compiled = comp $compiled, $name;
+				do if $class.HOW.?is-macro: $class {
+					Map.new: (
+						'&__TEMPLATE_MACRO__' ~ $name => sub (&body, |c) {
+							compiled.(&body, $class.new: |c)
+						}
+					)
+				} else {
+					Map.new: (
+						'&__TEMPLATE_SUB__' ~ $name => sub (|c) {
+							compiled.($class.new(|c))
+						}
+					)
+				}
 			} else {
-				Map.new: (
-					'&__TEMPLATE_SUB__' ~ $name => sub (|c) {
-						compiled.($class.new(|c))
-					}
-				)
+				Map.new
 			}
 		}
 	}
@@ -220,6 +230,14 @@ role Cromponent {
 		}
 		$resp
 	}
+}
+
+##### REBUILD ADDS
+
+use Cro::HTTP::Router;
+
+sub respond($comp) is export {
+	content 'text/html', $comp.RESPOND;
 }
 
 =begin pod
