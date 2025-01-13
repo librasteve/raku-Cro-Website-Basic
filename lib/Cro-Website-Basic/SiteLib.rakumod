@@ -13,10 +13,20 @@ model Person {
 	has Str      $.lastName   is column;
 	has Str      $.email      is column;
 	has Str      $.city       is column;
+
+	method ^populate($model) {
+		for json-data() -> %record {
+			$model.^create(|%record);
+		}
+	}
 }
 
 red-defaults “SQLite”;
 Person.^create-table;
+Person.^populate;
+
+# Verify test records were created
+#warn Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", "); $*ERR.flush;
 
 class SearchBox {
 	has $.title;
@@ -99,13 +109,23 @@ class SearchTable is export {
 	}
 }
 
+##### HTML Functional Export #####
 
-for json-data() -> %record {
-	Person.^create(|%record);
+# put in all the tags programmatically
+# viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
+
+my package EXPORT::DEFAULT {
+
+	for @components -> $name {
+
+		OUR::{'&' ~ $name.lc} :=
+			sub (*@a, *%h) {
+				::($name).new( |@a, |%h ).render;
+			}
+	}
 }
 
-# Verify records were created
-#warn Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", "); $*ERR.flush;
+##### Person Data #####
 
 use JSON::Fast;
 sub json-data {
@@ -215,18 +235,4 @@ sub json-data {
     END
 }
 
-##### HTML Functional Export #####
 
-# put in all the tags programmatically
-# viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
-
-my package EXPORT::DEFAULT {
-
-	for @components -> $name {
-
-		OUR::{'&' ~ $name.lc} :=
-			sub (*@a, *%h) {
-				::($name).new( |@a, |%h ).render;
-			}
-	}
-}
