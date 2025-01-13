@@ -99,6 +99,8 @@ sub comp($code, $name) {
 	}
 }
 
+use Cro::HTTP::Router;
+
 role Cromponent {
 
 	my $name = ::?CLASS.^name;
@@ -109,19 +111,16 @@ role Cromponent {
 			:delete(&del) is copy,
 			:&create      is copy,
 			:&update      is copy,
-			:&base        is copy;    # FIXME rethink location eg html base tag
-#			:$url-part = $component.^name.lc,
-			:$url-part = $component.^name.split('::').tail.lc,  # FIXME subst :: to -
+			:$url-part = $component.^name.subst('::', '-', :g).lc,
 			:$macro    = $component.HOW.?is-macro($component) // False,
 		) is export {
 			my $cmp-name = $component.^name;
-			use Cro::HTTP::Router;
+#			use Cro::HTTP::Router;
 			without $*CRO-ROUTE-SET {
 				die "Cromponents should be added from inside a `route {}` block"
 			}
 			my $route-set := $*CRO-ROUTE-SET;
 
-			&base   //=                { $component.BASE           } if $component.^can: "BASE";
 			&load   //= -> $id         { $component.LOAD: $id      } if $component.^can: "LOAD";
 			&create //= -> *%pars      { $component.CREATE: |%pars } if $component.^can: "CREATE";
 			&del    //= -> $id         { load($id).DELETE          } if $component.^can: "DELETE";
@@ -131,24 +130,24 @@ role Cromponent {
 				my &LOAD = -> $id {
 					my $obj = load $id;
 					die "Cromponent '$cmp-name' could not be loaded with id '$id'" without $obj;
-#					$obj
-					respond $obj;
+					$obj
 				}
 				with &create {
 					note "adding POST $url-part";
 					post -> Str $ where $url-part {
 						request-body -> $data {
 							my $new = create |$data.pairs.Map;
-#							redirect "$url-part/{ $new.id }", :see-other
-							redirect "/{&base}/{$url-part}/{$new.id}", :see-other # FIXME
+							redirect "$url-part/{ $new.id }", :see-other
 						}
 					}
 				}
 
 				note "adding GET $url-part/<id>";
+				warn $url-part.raku; $*ERR.flush;
 				get -> Str $ where $url-part, $id {
 					my $tag = $component.^name;
 					my $comp = LOAD $id;
+					respond $comp if $component.^can: "RESPOND";
 					content 'text/html', $comp.Str
 				}
 
@@ -190,7 +189,7 @@ role Cromponent {
 				}
 			}
 		}
-		method exports(Mu:U $class) {
+		method exports( Mu:U $class --> Map() ) {
 			if $class.^can: "RENDER" {
 				my Str $compiled = $class.&compile-cromponent;
 				my $name = $class.^name;
@@ -208,8 +207,6 @@ role Cromponent {
 						}
 					)
 				}
-			} else {
-				Map.new
 			}
 		}
 	}
@@ -233,8 +230,6 @@ role Cromponent {
 }
 
 ##### REBUILD ADDS
-
-use Cro::HTTP::Router;
 
 sub respond($comp) is export {
 	content 'text/html', $comp.RESPOND;

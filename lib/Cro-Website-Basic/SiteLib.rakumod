@@ -80,42 +80,47 @@ class SearchTable does Cromponent {
 	has $.id = $next-id++;
 	has $.title = 'Search';
 
-	#iamerejh holder
+	#iamerejh
 
-#	has SearchBox $.searchbox .= new:
-#			:$!title, :url-path("/$!location/searchtable/$!id/search");
-#	has Results   $.results   .= new;
+	has SearchBox $.searchbox .= new:
+			:$!title, :url-path("/$!base/searchtable/$!id/search");
 
-	submethod TWEAK(|) { %holder{$!id} = self }
+	has Results   $.results   .= new;
 
-	method BASE { $!base }
+	submethod TWEAK  { %holder{$!id} = self }
+
 	method LOAD($id) { %holder{$id} }
 
 	method all { %holder.values }
 
-#	method search(:$needle) {
-#
-#		sub check($_) { .fc.contains($needle.fc) }
-#
-#		$!results.data = Person.^all.grep: {
-#			$_.firstName.&check ||
-#			$_.lastName.&check  ||
-#			$_.email.&check
-#		};
-#
-#		render $!results;
-#	}
+	method search(:$needle) is accessible {
+
+		sub check($_) { .fc.contains($needle.fc) }
+
+		$!results.data = Person.^all.grep: {
+			$_.firstName.&check ||
+			$_.lastName.&check  ||
+			$_.email.&check
+		};
+
+		respond $!results;
+	}
 
 	method RESPOND {
 		[
-#			$!searchbox.RESPOND;
+			$!searchbox.RESPOND;
 
-			table :class<striped>, [
+			table :class<striped>, # $[[1,2],[3,4]]
+			[
 #				self.thead;
 				tbody :id<search-results>;
 			];
 		]
 	}
+}
+
+sub EXPORT() {
+	SearchTable.^exports
 }
 
 #`[[
@@ -169,10 +174,6 @@ class SearchTable does Cromponent {
 	}
 }
 #]]
-
-sub EXPORT() {
-	SearchTable.^exports
-}
 
 
 ##### HTML Functional Export #####
