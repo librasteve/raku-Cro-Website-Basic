@@ -80,7 +80,7 @@ class SearchTable does Cromponent {
 	has $.id = $next-id++;
 	has $.title = 'Search';
 
-	#iamerejh
+	#iamerejh - check st id increments, check search route
 
 	has SearchBox $.searchbox .= new:
 			:$!title, :url-path("/$!base/searchtable/$!id/search");

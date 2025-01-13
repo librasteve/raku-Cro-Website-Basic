@@ -1,4 +1,5 @@
 use Cro::WebApp::Template::Builtins;
+
 multi trait_mod:<is>(Mu:U $comp, Bool :$macro!) is export {
 	my role CromponentMacroHOW {
 		method is-macro(|) { True }
@@ -102,7 +103,6 @@ sub comp($code, $name) {
 use Cro::HTTP::Router;
 
 role Cromponent {
-
 	my $name = ::?CLASS.^name;
 	::?CLASS.HOW does my role ExportMethod {
 		method add-cromponent-routes(
@@ -111,7 +111,7 @@ role Cromponent {
 			:delete(&del) is copy,
 			:&create      is copy,
 			:&update      is copy,
-			:$url-part = $component.^name.subst('::', '-', :g).lc,
+			:$url-part = $component.^name.split('::').last.lc,
 			:$macro    = $component.HOW.?is-macro($component) // False,
 		) is export {
 			my $cmp-name = $component.^name;
@@ -125,6 +125,8 @@ role Cromponent {
 			&create //= -> *%pars      { $component.CREATE: |%pars } if $component.^can: "CREATE";
 			&del    //= -> $id         { load($id).DELETE          } if $component.^can: "DELETE";
 			&update //= -> $id, *%pars { load($id).UPDATE: |%pars  } if $component.^can: "UPDATE";
+
+			die 'yo'; $*ERR.flush;
 
 			with &load {
 				my &LOAD = -> $id {
@@ -143,7 +145,6 @@ role Cromponent {
 				}
 
 				note "adding GET $url-part/<id>";
-				warn $url-part.raku; $*ERR.flush;
 				get -> Str $ where $url-part, $id {
 					my $tag = $component.^name;
 					my $comp = LOAD $id;
@@ -228,8 +229,6 @@ role Cromponent {
 		$resp
 	}
 }
-
-##### REBUILD ADDS
 
 sub respond($comp) is export {
 	content 'text/html', $comp.RESPOND;
