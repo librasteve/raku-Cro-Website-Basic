@@ -72,7 +72,7 @@ model Todo does Cromponent {
 						<input
 							type="checkbox"
 							<?.done> checked </?>
-							hx-get="./todo/<.id>/toggle"
+							hx-get="todos/todo/<.id>/toggle"
 							hx-target="closest tr"
 							hx-swap="outerHTML"
 						>
@@ -90,7 +90,7 @@ model Todo does Cromponent {
 				</td>
 				<td>
 					<button
-						hx-delete="./todo/<.id>"
+						hx-delete="todos/todo/<.id>"
 						hx-confirm="Are you sure?"
 						hx-target="closest tr"
 						hx-swap="delete"
