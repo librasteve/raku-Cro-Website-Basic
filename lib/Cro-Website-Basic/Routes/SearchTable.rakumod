@@ -12,7 +12,7 @@ my $base = 'searchtable';
 
 sub index {
     div [
-        searchtable :thead<First Last Email>, :title("Search People"), :$base;
+        searchtable :thead<First Last Email>, :title("Search People"), :$base, :id(0);
     ]
 }
 

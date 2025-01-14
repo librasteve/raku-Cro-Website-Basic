@@ -80,7 +80,7 @@ class SearchTable does Cromponent {
 	has $.id = $next-id++;
 	has $.title = 'Search';
 
-	#iamerejh - check st id increments, check search route
+	#iamerejh - check search route
 
 	has SearchBox $.searchbox .= new:
 			:$!title, :url-path("/$!base/searchtable/$!id/search");
@@ -89,7 +89,7 @@ class SearchTable does Cromponent {
 
 	submethod TWEAK  { %holder{$!id} = self }
 
-	method LOAD($id) { %holder{$id} }
+	method LOAD($id) { warn self.raku; $*ERR.flush; %holder{$id} }
 
 	method all { %holder.values }
 
@@ -107,14 +107,16 @@ class SearchTable does Cromponent {
 	}
 
 	method RESPOND {
-		[
-			$!searchbox.RESPOND;
+#		warn self.raku; $*ERR.flush;
 
-			table :class<striped>, # $[[1,2],[3,4]]
-			[
+		[
+#			$!searchbox.RESPOND;
+
+			table :class<striped>, $[[1,2],[3,4]]
+#			[
 #				self.thead;
-				tbody :id<search-results>;
-			];
+#				tbody :id<search-results>;
+#			];
 		]
 	}
 }

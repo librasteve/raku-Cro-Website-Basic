@@ -126,8 +126,6 @@ role Cromponent {
 			&del    //= -> $id         { load($id).DELETE          } if $component.^can: "DELETE";
 			&update //= -> $id, *%pars { load($id).UPDATE: |%pars  } if $component.^can: "UPDATE";
 
-			die 'yo'; $*ERR.flush;
-
 			with &load {
 				my &LOAD = -> $id {
 					my $obj = load $id;
@@ -148,8 +146,9 @@ role Cromponent {
 				get -> Str $ where $url-part, $id {
 					my $tag = $component.^name;
 					my $comp = LOAD $id;
-					respond $comp if $component.^can: "RESPOND";
-					content 'text/html', $comp.Str
+					content 'text/html', "url-part is $url-part";
+#					respond $comp if $component.^can: "RESPOND";
+#					content 'text/html', $comp.Str
 				}
 
 				with &del {
