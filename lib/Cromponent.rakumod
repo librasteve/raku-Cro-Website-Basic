@@ -111,7 +111,7 @@ role Cromponent {
 			:delete(&del) is copy,
 			:&create      is copy,
 			:&update      is copy,
-			:$url-part = $component.^name.split('::').last.lc,
+			:$url-part = $component.^name.split('::').tail.lc,
 			:$macro    = $component.HOW.?is-macro($component) // False,
 		) is export {
 			my $cmp-name = $component.^name;
@@ -146,9 +146,8 @@ role Cromponent {
 				get -> Str $ where $url-part, $id {
 					my $tag = $component.^name;
 					my $comp = LOAD $id;
-					content 'text/html', "url-part is $url-part";
-#					respond $comp if $component.^can: "RESPOND";
-#					content 'text/html', $comp.Str
+					respond $comp if $component.^can: "RESPOND";
+					content 'text/html', $comp.Str
 				}
 
 				with &del {

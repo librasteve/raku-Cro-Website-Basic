@@ -89,7 +89,7 @@ class SearchTable does Cromponent {
 
 	submethod TWEAK  { %holder{$!id} = self }
 
-	method LOAD($id) { warn self.raku; $*ERR.flush; %holder{$id} }
+	method LOAD($id) { %holder{$id} }
 
 	method all { %holder.values }
 
@@ -110,13 +110,13 @@ class SearchTable does Cromponent {
 #		warn self.raku; $*ERR.flush;
 
 		[
-#			$!searchbox.RESPOND;
+			$!searchbox.RESPOND;
 
-			table :class<striped>, $[[1,2],[3,4]]
-#			[
+			table :class<striped>, #$[[1,2],[3,4]]
+			[
 #				self.thead;
-#				tbody :id<search-results>;
-#			];
+				tbody :id<search-results>;
+			];
 		]
 	}
 }

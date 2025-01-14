@@ -8,18 +8,18 @@ use Cro::Website::Basic::SiteLib;
 
 use HTML::Functional :CRO;
 
-my $base = 'searchtable';
-
-sub index {
-    div [
-        searchtable :thead<First Last Email>, :title("Search People"), :$base, :id(0);
-    ]
-}
-
 sub searchtable-routes() is export {
     route {
+
+        my $base = 'searchtable';
+        SearchTable.^add-cromponent-routes;
+
         get -> {
-            content 'text/html', index;
+            content 'text/html',
+                div [
+                    searchtable :thead<First Last Email>, :title("Search People"), :$base, :id(0);
+                ]
+            ;
         }
     }
 }
