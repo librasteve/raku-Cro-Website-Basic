@@ -1,0 +1,15 @@
+<#><?.base><base href="<.base>"></?></#>
+<base href="todos">
+<table>
+    <@.todos: $todo>
+        <&HTML($todo)>
+    </@>
+</table>
+<form
+    hx-post="./todo"
+    hx-target="table"
+    hx-swap="beforeend"
+    hx-on::after-request="this.reset()"
+>
+    <input name=data><button type=submit>+</button>
+</form>

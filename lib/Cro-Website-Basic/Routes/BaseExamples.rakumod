@@ -1,5 +1,5 @@
-use Component;
-use Component::BaseLib;
+use Cromponent;
+use BaseLib;
 
 use HTML::Functional :CRO;
 

@@ -1,3 +1,4 @@
+#`[
 use Component;
 
 my $component = Component.new: :location<todos>;
@@ -43,15 +44,81 @@ class Todo {
 		END
     }
 }
+#]
 
-class Frame {
+#[
+use Cromponent;
+use Red:api<2>;
+
+model Todo does Cromponent {
+    has UInt   $.id   is serial;
+    has Bool() $.done is rw is column = False;
+    has Str()  $.data is column is required;
+
+    method LOAD(Str() $id)  { Todo.^load: $id }
+    method CREATE(*%data)   { Todo.^create: |%data }
+    method DELETE           { $.^delete }
+
+    method toggle is accessible {
+        $!done = !$!done;
+        $.^save
+    }
+
+    method RENDER {
+        q:to/END/;
+			<tr id="todo-<.id>">
+				<td>
+					<label class="todo-toggle">
+						<input
+							type="checkbox"
+							<?.done> checked </?>
+							hx-get="./todo/<.id>/toggle"
+							hx-target="closest tr"
+							hx-swap="outerHTML"
+						>
+						<span class="custom-checkbox">
+						</span>
+					</label>
+				</td>
+				<td>
+					<?.done>
+						<del><.data></del>
+					</?>
+					<!>
+						<.data>
+					</!>
+				</td>
+				<td>
+					<button
+						hx-delete="./todo/<.id>"
+						hx-confirm="Are you sure?"
+						hx-target="closest tr"
+						hx-swap="delete"
+					>
+						-
+					</button>
+				</td>
+			</tr>
+		END
+	}
+}
+#]
+
+sub EXPORT() {
+    Todo.^exports
+}
+
+#`[
+class Frame does Cromponent {
     has Todo() @.todos;
 
-    method render {
-        qq:to/END/;
+    method RENDER {
+        q:to/END/;
             <div>
                 <table>
-                     { @!todos.map: *.render }
+                    <@.todos: $todo>
+                        <&HTML($todo)>
+                    </@>
                 </table>
                 <form
                     hx-post="/todos/todo"
@@ -72,16 +139,37 @@ use Cro::WebApp::Template;
 sub todos-routes() is export {
     route {
         my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
+        Todo.^add-cromponent-routes;
 
         get -> {
-            render Frame.new: :@todos;
+            respond Frame.new: :@todos;
         }
 
-        $component.add:
-            Todo,
-            :load( -> UInt() $id { @todos.first: { .id == $id } }),
-            :create(-> *%data { @todos.push: my $n = Todo.new: |%data; $n }),
-            :delete( -> UInt() $id { @todos .= grep: { .id != $id } }),
-        ;
+#        $component.add:
+#            Todo,
+#            :load( -> UInt() $id { @todos.first: { .id == $id } }),
+#            :create(-> *%data { @todos.push: my $n = Todo.new: |%data; $n }),
+#            :delete( -> UInt() $id { @todos .= grep: { .id != $id } }),
+#        ;
+    }
+}
+#]
+
+
+use Cro::HTTP::Router;
+use Cro::HTTP::Server;
+use Cro::WebApp::Template;
+
+sub todos-routes() is export {
+    route {
+#        red-defaults "SQLite";   # FIXME move to Routes.rakumod? (cant mix)
+        Todo.^create-table;
+        template-location "templates/";
+
+        Todo.^add-cromponent-routes;
+
+        get -> {
+            template "todo-base.crotmp", { :todos(Todo.^all.Seq) }
+        }
     }
 }

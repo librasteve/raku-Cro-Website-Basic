@@ -18,14 +18,14 @@ As mentioned on cro-irc, I have had some frustrations with the earlier Cromponen
 
 In my previous feedback, I have mentioned that I would like to be able to build Cro components directly in raku code with the HTML::Functional library instead of with crotmp. My feedback has been poorly formed because my ideas of what I have wanted have been also in very early stages of formation - so apologies for any lack of clarity.
 
-This repo is my attempt in the last two weeks to elaborate what I think is the set of features of a Component module to support the coding style that I seek - hopefully Cromponent can be adjusted to make this style possible in addition to the crotmp style. I would encourage you to start the server on your machine (see Getting Started info below to get a feel for what I am doing, especially with Pico CSS and SASS)
+This repo is my attempt in the last two weeks to elaborate what I think is the set of features of a Cromponent module to support the coding style that I seek - hopefully Cromponent can be adjusted to make this style possible in addition to the crotmp style. I would encourage you to start the server on your machine (see Getting Started info below to get a feel for what I am doing, especially with Pico CSS and SASS)
 
 Here is the tree and some explanations:
 
 lib
-├── Component
-│   └── BaseLib.rakumod           <== 2. my idea is that the Component module comes with a set of standard libraries
-├── Component.rakumod             <== 1. this is a "stand in" for the Cromponent.rakumod module [1]
+├── Cromponent
+│   └── BaseLib.rakumod           <== 2. my idea is that the Cromponent module comes with a set of standard libraries
+├── Cromponent.rakumod             <== 1. this is a "stand in" for the Cromponent.rakumod module [1]
 └── Cro-Website-Basic             <== 3. this is my current website project name ... likely to changes
     ├── Routes
     │   ├── BaseExamples.rakumod  <== 4a. this is an early wip to implement the Pico examples as a lib
@@ -36,10 +36,10 @@ lib
 
 Notes:
 [1] I forked the Cromponent.rakumod file from FCO/Cromponent afde916f5781cf3173ced75fc0658121fb6c8b7a (Dec 8 2024) [prior to added macro support]
-[2] Component libraries should also be pluggable and installable with zef in the usual way
+[2] Cromponent libraries should also be pluggable and installable with zef in the usual way
 [3] I think it would be nice to build example websites as raku modules and then others can fork and extend them
-[4] There are 2 Lib rakumod files here - they all contain Components - the idea is that one comes with the Component module, one is built as the site implementation
-[5] There is already potential for a Component library for the Pico CSS examples and the HTMX examples
+[4] There are 2 Lib rakumod files here - they all contain Components - the idea is that one comes with the Cromponent module, one is built as the site implementation
+[5] There is already potential for a Cromponent library for the Pico CSS examples and the HTMX examples
 
 
 Here are the areas where my work has drifted away after the fork from Cromponent... ie this is my objective set for HTML::Functional:
@@ -47,13 +47,13 @@ Here are the areas where my work has drifted away after the fork from Cromponent
 - write HTML::Functional code to generate HTML (eg in a render or RENDER method)
 - use roles to call in fragments and hooks to call them in the parent render method (see `self.thead` in the example)
 - ability to suppress the default Cromponent "refresh all" behaviour and to render fragments from eg contained components (eg. `method search` on ll76)
-- a `render` method to be used within the Component (see bottom of Component.rakumod)
+- a `render` method to be used within the Cromponent (see bottom of Cromponent.rakumod)
 - provision of location and holder info from the invoker
-- ability to use Components with long FQNs (I have hacked this into Component.rakumod)
+- ability to use Components with long FQNs (I have hacked this into Cromponent.rakumod)
 - ability to use Red locally for models (which I guess you have in mind all along)
 - general strong affinity to HTMX
 
-Examples of these are set out mainly in the SearchTable.rakumod and Component.rakumod files
+Examples of these are set out mainly in the SearchTable.rakumod and Cromponent.rakumod files
 
 I hope that this is all clear, as mentioned I have not just stuck this as a PR on Cromponent since it is quite a major set of changes and tbh I do not know if these objectives can be met in your conception of Cromponent. All questions and comments welcome on the cro-irc or PM.
 
@@ -63,7 +63,7 @@ In a perfect world we would have one Cromponent module that offers crotmp and fu
 
 ---
 
-And, also on CSS. This work represents my first stab at Component-CSS integration. I think that the use of standard raku classes & roles is a promising fit between SASS (SCSS) mixin behaviours and raku roles but I have not had time (or need) to attach much CSS to each component I have built. So the following is quite flexible list of ideas that will need to be tried...
+And, also on CSS. This work represents my first stab at Cromponent-CSS integration. I think that the use of standard raku classes & roles is a promising fit between SASS (SCSS) mixin behaviours and raku roles but I have not had time (or need) to attach much CSS to each component I have built. So the following is quite flexible list of ideas that will need to be tried...
 
 Here is my guess objective set for CSS:
 
@@ -87,7 +87,7 @@ path is
   3. add htmx based edit / preview to certain pages for admin (like the current rakudoc site), with raku syntax highlighting with Rainbow and 
   4. do something similar for markdown
 
-# Component libs
+# Cromponent libs
 
 https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 go for maximally decomposed apps

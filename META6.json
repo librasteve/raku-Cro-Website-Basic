@@ -21,7 +21,7 @@
     "provides": {
         "Cromponent": "lib/Cromponent.rakumod",
         "Component": "lib/Component.rakumod",
-        "Component::BaseLib": "lib/Component/BaseLib.rakumod",
+        "BaseLib": "lib/BaseLib.rakumod",
         "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",
         "Cro::Website::Basic::SiteLib": "lib/Cro-Website-Basic/SiteLib.rakumod",
         "Cro::Website::Basic::Routes::BaseExamples": "lib/Cro-Website-Basic/Routes/BaseExamples.rakumod",

@@ -1,4 +1,4 @@
-unit module Component::BaseLib;
+unit module BaseLib;
 
 use HTML::Functional;
 

@@ -146,8 +146,11 @@ role Cromponent {
 				get -> Str $ where $url-part, $id {
 					my $tag = $component.^name;
 					my $comp = LOAD $id;
-					respond $comp if $component.^can: "RESPOND";
-					content 'text/html', $comp.Str
+					if $component.^can: "RESPOND" {
+						respond $comp
+					} else {
+						content 'text/html', $comp.Str
+					}
 				}
 
 				with &del {
@@ -175,14 +178,14 @@ role Cromponent {
 						put -> Str $ where $url-part, $id, Str $name {
 							request-body -> $data {
 								LOAD($id)."$name"(|$data.pairs.Map);
-								redirect "../{ $id }", :see-other
+								redirect "../{ $id }", :see-other unless $component.^can: "RESPOND"
 							}
 						}
 					} else {
 						note "adding GET $url-part/<id>/$name";
 						get -> Str $ where $url-part, $id, Str $name {
 							LOAD($id)."$name"();
-							redirect "../{ $id }", :see-other
+							redirect "../{ $id }", :see-other unless $component.^can: "RESPOND"
 						}
 					}
 				}
@@ -229,7 +232,7 @@ role Cromponent {
 }
 
 sub respond($comp) is export {
-	content 'text/html', $comp.RESPOND;
+	content 'text/html', $comp.RESPOND
 }
 
 =begin pod

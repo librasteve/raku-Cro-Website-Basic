@@ -1,9 +1,7 @@
 use HTML::Functional;
 
-#use Component;
-#use Component::BaseLib :NONE;
-
 use Cromponent;
+use BaseLib :NONE;
 
 my @components = <SearchTable>;
 
@@ -73,6 +71,8 @@ my UInt $next = 1;
 #	also does Component::BaseLib::THead;
 
 class SearchTable does Cromponent {
+	also does BaseLib::THead;
+
 	my UInt $next-id = 1;
 	my %holder;
 	has $.base;
@@ -80,17 +80,13 @@ class SearchTable does Cromponent {
 	has $.id = $next-id++;
 	has $.title = 'Search';
 
-	#iamerejh - check search route
-
 	has SearchBox $.searchbox .= new:
 			:$!title, :url-path("/$!base/searchtable/$!id/search");
 
-	has Results   $.results   .= new;
+	has Results $.results .= new;
 
 	submethod TWEAK  { %holder{$!id} = self }
-
 	method LOAD($id) { %holder{$id} }
-
 	method all { %holder.values }
 
 	method search(:$needle) is accessible {
@@ -107,76 +103,16 @@ class SearchTable does Cromponent {
 	}
 
 	method RESPOND {
-#		warn self.raku; $*ERR.flush;
-
 		[
 			$!searchbox.RESPOND;
 
-			table :class<striped>, #$[[1,2],[3,4]]
-			[
-#				self.thead;
+			table :class<striped>, [
+				self.thead;
 				tbody :id<search-results>;
 			];
 		]
 	}
 }
-
-sub EXPORT() {
-	SearchTable.^exports
-}
-
-#`[[
-class SearchTable does Cromponent {
-	my UInt $next-id = 1;
-	my %holder;
-
-	has UInt $.id = $next-id++;
-
-	has $.title = 'Search';
-
-	#	has SearchBox $.searchbox .= new:
-	#		:$!title, :url-path("/searchtable/$!id/search");
-
-	#	has Results   $.results   .= new;
-
-	method TWEAK(|) { %holder{$!id} = self }
-
-	method LOAD($id) { %holder{$id} }
-
-	method all { %holder.values }
-
-	#	method booboo is accessible {
-	#		warn 'booboo'; $*ERR.flush;
-	#	}
-
-	#	method search(:$needle) is accessible {
-	#
-	#		sub check($_) { .fc.contains($needle.fc) }
-	#
-	#		$!results.data = Person.^all.grep: {
-	#			$_.firstName.&check ||
-	#			$_.lastName.&check  ||
-	#			$_.email.&check
-	#		};
-	#
-	#		render $!results;
-	#	}
-
-	method RENDER {
-		[
-			#			$!searchbox.render;
-			searchbox; :$!title; #, :url-path("/searchtable/$!id/search");
-
-			table :class<striped>, [
-				#				self.thead;
-				#				tbody :id<search-results>;
-				table $[[1, 2], [3, 4]];
-			];
-		]
-	}
-}
-#]]
-
 
 ##### HTML Functional Export #####
 
