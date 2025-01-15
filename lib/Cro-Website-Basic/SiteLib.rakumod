@@ -65,23 +65,18 @@ class Results {
 	}
 }
 
-my UInt $next = 1;
-
-#class SearchTable is export {
-#	also does Component::BaseLib::THead;
-
 class SearchTable does Cromponent {
 	also does BaseLib::THead;
 
 	my UInt $next-id = 1;
 	my %holder;
-	has $.base;
 
 	has $.id = $next-id++;
+	has $.base = '';
 	has $.title = 'Search';
 
 	has SearchBox $.searchbox .= new:
-			:$!title, :url-path("/$!base/searchtable/$!id/search");
+			:$!title, :url-path("$!base/searchtable/$!id/search");
 
 	has Results $.results .= new;
 
@@ -122,7 +117,6 @@ class SearchTable does Cromponent {
 my package EXPORT::DEFAULT {
 
 	for @components -> $name {
-
 		OUR::{'&' ~ $name.lc} :=
 			sub (*@a, *%h) {
 				::($name).new( |@a, |%h ).RESPOND;
