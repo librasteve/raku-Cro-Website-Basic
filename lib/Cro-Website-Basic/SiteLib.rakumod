@@ -1,6 +1,6 @@
 use HTML::Functional;
 
-use Cromponent;
+use Component;
 use BaseLib :NONE;
 
 my @components = <SearchTable>;
@@ -65,7 +65,7 @@ class Results {
 	}
 }
 
-class SearchTable does Cromponent {
+class SearchTable does Component {
 	also does BaseLib::THead;
 
 	my UInt $next-id = 1;

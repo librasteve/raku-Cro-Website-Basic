@@ -47,10 +47,10 @@ class Todo {
 #]
 
 #[
-use Cromponent;
+use Component;
 use Red:api<2>;
 
-model Todo does Cromponent {
+model Todo does Component {
     has UInt   $.id   is serial;
     has Bool() $.done is rw is column = False;
     has Str()  $.data is column is required;
@@ -109,7 +109,7 @@ sub EXPORT() {
 }
 
 #`[
-class Frame does Cromponent {
+class Frame does Component {
     has Todo() @.todos;
 
     method RENDER {
@@ -139,7 +139,7 @@ use Cro::WebApp::Template;
 sub todos-routes() is export {
     route {
         my @todos = do for <blablabla blebleble> -> $data { Todo.new: :$data }
-        Todo.^add-cromponent-routes;
+        Todo.^add-component-routes;
 
         get -> {
             respond Frame.new: :@todos;
@@ -166,7 +166,7 @@ sub todos-routes() is export {
         Todo.^create-table;
         template-location "templates/";
 
-        Todo.^add-cromponent-routes;
+        Todo.^add-component-routes;
 
         get -> {
             template "todo-base.crotmp", { :todos(Todo.^all.Seq) }

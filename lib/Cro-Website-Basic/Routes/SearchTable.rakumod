@@ -1,4 +1,4 @@
-use Cromponent;
+use Component;
 use Cro::HTTP::Router;
 
 use Cro::Website::Basic::SiteLib;
@@ -9,7 +9,7 @@ sub searchtable-routes() is export {
     route {
 
         my $base = 'searchtable';
-        SearchTable.^add-cromponent-routes;
+        SearchTable.^add-component-routes;
 
         get -> {
             content 'text/html',

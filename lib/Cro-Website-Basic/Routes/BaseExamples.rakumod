@@ -1,4 +1,4 @@
-use Cromponent;
+use Component;
 use BaseLib;
 
 use HTML::Functional :CRO;

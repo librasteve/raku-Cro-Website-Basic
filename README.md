@@ -179,7 +179,7 @@ from https://picocss.org
 - `git clone https://github.com/this.git && cd Cro::Website::Basic-Website`
 - `zef install . --force-install --/test`
 - adjust .cro.yml for your needs (e.g. HTTPS) -or-
-- `export WEBSITE_HOST="0.0.0.0" && export WEBSITE_PORT="8888"`
+- `export WEBSITE_HOST="0.0.0.0" && export WEBSITE_PORT="3000"`
 - `raku -Ilib service.raku` -or-
 - `nohup raku service.raku >> server.log 2>&1`  <=== detach from terminal [note PID]
 - `tail -f server.log` and finally `kill -9 PID`  [ps -ef | grep raku]

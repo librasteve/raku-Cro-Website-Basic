@@ -1,11 +1,4 @@
-use Cro::WebApp::Template::Builtins;
 
-multi trait_mod:<is>(Mu:U $comp, Bool :$macro!) is export {
-	my role CromponentMacroHOW {
-		method is-macro(|) { True }
-	}
-	$comp.HOW does CromponentMacroHOW
-}
 
 multi trait_mod:<is>(Method $m, Bool :$accessible!) is export {
 	trait_mod:<is>($m, :accessible{})
@@ -18,6 +11,16 @@ multi trait_mod:<is>(Method $m, :$accessible! (:$name = $m.name)) is export {
 	}
 
 	$m does IsAccessible($name)
+}
+
+#`[
+use Cro::WebApp::Template::Builtins;
+
+multi trait_mod:<is>(Mu:U $comp, Bool :$macro!) is export {
+	my role ComponentMacroHOW {
+		method is-macro(|) { True }
+	}
+	$comp.HOW does ComponentMacroHOW
 }
 
 my constant %escapes = %(
@@ -48,16 +51,16 @@ multi escape-attribute(Mu:D $attr, Mu $, Mu $) {
 
 my %pcache;
 
-sub parse(Mu:U $cromponent) {
-	my $name = $cromponent.^name;
+sub parse(Mu:U $component) {
+	my $name = $component.^name;
 	.return with %pcache{$name};
 	use Cro::WebApp::Template::Repository;
 	use Cro::WebApp::Template::Parser;
 	use Cro::WebApp::Template::ASTBuilder;
 
-	my $code = $cromponent.RENDER;
+	my $code = $component.RENDER;
 
-	my $*TEMPLATE-FILE = $cromponent.^name.IO;
+	my $*TEMPLATE-FILE = $component.^name.IO;
 	my $*TEMPLATE-REPOSITORY = get-template-repository;
 
 	my $*COMPILING-PRELUDE = True;
@@ -85,11 +88,11 @@ sub compile($ast, Bool :$macro = False --> Str) {
 	;
 }
 my %scache;
-sub compile-cromponent(Mu:U $cromponent) {
-	my $name = $cromponent.^name;
+sub compile-component(Mu:U $component) {
+	my $name = $component.^name;
 	.return with %scache{$name};
-	my $ast := $cromponent.&parse;
-	my Str $code = $ast.&compile: |(:macro if $cromponent.HOW.?is-macro: $cromponent);
+	my $ast := $component.&parse;
+	my Str $code = $ast.&compile: |(:macro if $component.HOW.?is-macro: $component);
 	%scache{$name} = $code;
 	$code
 }
@@ -99,13 +102,14 @@ sub comp($code, $name) {
 		%cache{$name} //= $code.EVAL;
 	}
 }
+#]
 
 use Cro::HTTP::Router;
 
-role Cromponent {
+role Component {
 	my $name = ::?CLASS.^name;
 	::?CLASS.HOW does my role ExportMethod {
-		method add-cromponent-routes(
+		method add-component-routes(
 			$component    is copy,
 			:&load        is copy,
 			:delete(&del) is copy,
@@ -117,7 +121,7 @@ role Cromponent {
 			my $cmp-name = $component.^name;
 #			use Cro::HTTP::Router;
 			without $*CRO-ROUTE-SET {
-				die "Cromponents should be added from inside a `route {}` block"
+				die "Components should be added from inside a `route {}` block"
 			}
 			my $route-set := $*CRO-ROUTE-SET;
 
@@ -129,7 +133,7 @@ role Cromponent {
 			with &load {
 				my &LOAD = -> $id {
 					my $obj = load $id;
-					die "Cromponent '$cmp-name' could not be loaded with id '$id'" without $obj;
+					die "Component '$cmp-name' could not be loaded with id '$id'" without $obj;
 					$obj
 				}
 				with &create {
@@ -191,9 +195,10 @@ role Cromponent {
 				}
 			}
 		}
+		#`[
 		method exports( Mu:U $class --> Map() ) {
 			if $class.^can: "RENDER" {
-				my Str $compiled = $class.&compile-cromponent;
+				my Str $compiled = $class.&compile-component;
 				my $name = $class.^name;
 				my &compiled = comp $compiled, $name;
 				do if $class.HOW.?is-macro: $class {
@@ -211,9 +216,11 @@ role Cromponent {
 				}
 			}
 		}
+		#]
 	}
+	#`[
 	::?CLASS.^add_method: "Str", my method (|c) {
-		my Str $compiled = self.WHAT.&compile-cromponent;
+		my Str $compiled = self.WHAT.&compile-component;
 		my $name = self.^name;
 		my &compiled = comp $compiled, $name;
 		my %*WARNINGS;
@@ -229,6 +236,7 @@ role Cromponent {
 		}
 		$resp
 	}
+	#]
 }
 
 sub respond($comp) is export {
@@ -239,14 +247,14 @@ sub respond($comp) is export {
 
 =head1 NAME
 
-Cromponent - A way create web components with cro templates
+Component - A way create web components with cro templates
 
 =head1 SYNOPSIS
 
 =begin code :lang<raku>
 
-use Cromponent;
-class AComponent does Cromponent {
+use Component;
+class AComponent does Component {
 	has $.data;
 
 	method RENDER {
@@ -262,25 +270,25 @@ sub EXPORT { AComponent.^exports }
 
 =head1 DESCRIPTION
 
-Cromponent is a way create web components with cro templates
+Component is a way create web components with cro templates
 
-You can use Cromponents in 3 distinct (and complementar) ways
+You can use Components in 3 distinct (and complementar) ways
 
 =begin item
 
 In a template only way:
-If wou just want your Cromponent to be a "fancy substitute for cro-template sub/macro",
-You can simpley create your Cromponent, and on yout template, <:use> it, it with export
+If wou just want your Component to be a "fancy substitute for cro-template sub/macro",
+You can simpley create your Component, and on yout template, <:use> it, it with export
 a sub (or a macro if you used the C<is macro> trait) to your template, that sub (or macro)
-will accept any arguments you pass it and will pass it to your Cromponent's conscructor
+will accept any arguments you pass it and will pass it to your Component's conscructor
 (new), and use the result of that as the value to be used.
 
 Ex:
 
 =begin code :lang<raku>
-use Cromponent;
+use Component;
 
-class H1 does Cromponent is macro {
+class H1 does Component is macro {
 	has Str $.prefix = "My fancy H1";
 
 	method RENDER {
@@ -308,16 +316,16 @@ On your template:
 =begin item
 
 As a value passed as data to the template.
-If a Cromponent is passed as a value to a template, you can simply "print" it inside the template
+If a Component is passed as a value to a template, you can simply "print" it inside the template
 to have its rendered version, it will probably be an HTML, so it will need to be called inside
 a <&HTML()> call (I'm still trying to figureout how to avoid that requirement).
 
 Ex:
 
 =begin code :lang<raku>
-use Cromponent;
+use Component;
 
-class Todo does Cromponent {
+class Todo does Component {
 	has Str  $.text is required;
 	has Bool &.done = False;
 
@@ -360,14 +368,14 @@ On your template:
 
 =begin item
 
-You can also use a Cromponent to auto-generate cro routes
+You can also use a Component to auto-generate cro routes
 
 Ex:
 
 =begin code :lang<raku>
-use Cromponent;
+use Component;
 
-class Text does Cromponent {
+class Text does Component {
 	my UInt $next-id = 1;
 	my %texts;
 
@@ -403,7 +411,7 @@ On your route:
 
 use Text;
 route {
-	Text.^add-cromponent-routes;
+	Text.^add-component-routes;
 
 	get -> {
 		template "texts.crotmp", { :texts[ Texts.all ] }
@@ -412,7 +420,7 @@ route {
 
 =end code
 
-The call to the .^add-cromponent-routes method will create (on this case) 2 endpoints:
+The call to the .^add-component-routes method will create (on this case) 2 endpoints:
 
 =item C</text/<id>> -- that will return the HTML ot the obj with that id rendered (it will use the method C<LOAD> to get the object)
 
