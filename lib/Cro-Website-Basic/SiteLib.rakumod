@@ -84,7 +84,7 @@ class SearchTable does Component {
 	method LOAD($id) { %holder{$id} }
 	method all { %holder.values }
 
-	method search(:$needle) is accessible {
+	method search(:$needle) is routable {
 
 		sub check($_) { .fc.contains($needle.fc) }
 

@@ -39,7 +39,7 @@ sub routes() is export {
         use Cro::Website::Basic::Routes::BaseExamples;   #iamerejh
         include baseexamples => baseexamples-routes;
 
-#        use Cro::Website::Basic::Routes::Todos;
-#        include todos => todos-routes;
+        use Cro::Website::Basic::Routes::Todos;
+        include todos => todos-routes;
     }
 }

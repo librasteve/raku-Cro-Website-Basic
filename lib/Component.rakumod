@@ -1,108 +1,15 @@
-
-
-multi trait_mod:<is>(Method $m, Bool :$accessible!) is export {
-	trait_mod:<is>($m, :accessible{})
+multi trait_mod:<is>(Method $m, Bool :$routable!) is export {
+	trait_mod:<is>($m, :routable{})
 }
 
-multi trait_mod:<is>(Method $m, :$accessible! (:$name = $m.name)) is export {
-	my role IsAccessible {
-		has Str $.is-accessible-name;
-		method is-accessible { True }
+multi trait_mod:<is>(Method $m, :$routable! (:$name = $m.name)) is export {
+	my role IsRoutable {
+		has Str $.is-routable-name;
+		method is-routable { True }
 	}
 
-	$m does IsAccessible($name)
+	$m does IsRoutable($name)
 }
-
-#`[
-use Cro::WebApp::Template::Builtins;
-
-multi trait_mod:<is>(Mu:U $comp, Bool :$macro!) is export {
-	my role ComponentMacroHOW {
-		method is-macro(|) { True }
-	}
-	$comp.HOW does ComponentMacroHOW
-}
-
-my constant %escapes = %(
-    '&' => '&amp;',
-    '<' => '&lt;',
-    '>' => '&gt;',
-    '"' => '&quot;',
-    "'" => '&apos;',
-);
-
-multi escape-text(Mu:U $t, Mu $file, Mu $line) {
-    %*WARNINGS{"An expression at $file:$line evaluated to $t.^name()"}++;
-    ''
-}
-
-multi escape-text(Mu:D $text, Mu $, Mu $) {
-    $text.Str.subst(/<[<>&]>/, { %escapes{.Str} }, :g)
-}
-
-multi escape-attribute(Mu:U $t, Mu $file, Mu $line) {
-    %*WARNINGS{"An expression at $file:$line evaluted to $t.^name()"}++;
-    ''
-}
-
-multi escape-attribute(Mu:D $attr, Mu $, Mu $) {
-    $attr.Str.subst(/<[&"']>/, { %escapes{.Str} }, :g)
-}
-
-my %pcache;
-
-sub parse(Mu:U $component) {
-	my $name = $component.^name;
-	.return with %pcache{$name};
-	use Cro::WebApp::Template::Repository;
-	use Cro::WebApp::Template::Parser;
-	use Cro::WebApp::Template::ASTBuilder;
-
-	my $code = $component.RENDER;
-
-	my $*TEMPLATE-FILE = $component.^name.IO;
-	my $*TEMPLATE-REPOSITORY = get-template-repository;
-
-	my $*COMPILING-PRELUDE = True;
-	my %*WARNINGS;
-	my $ast := Cro::WebApp::Template::Parser.parse(
-		$code,
-		actions => Cro::WebApp::Template::ASTBuilder,
-	).ast;
-	if %*WARNINGS {
-		for %*WARNINGS.kv -> $text, $number {
-			warn "$text ($number time{ $number == 1 ?? '' !! 's' })";
-		}
-	}
-	%pcache{$name} = $ast;
-	$ast
-}
-
-sub compile($ast, Bool :$macro = False --> Str) {
-	my $*IN-SUB = False;
-	my $*IN-FRAGMENT = False;
-	my $children-compiled = $ast.children.map(*.compile).join(", ");
-	$macro
-		?? 'sub (&__MACRO_BODY__, $_) { join "", (' ~ $children-compiled ~ ') }'
-		!! 'sub ($_) { join "", (' ~ $children-compiled ~ ') }'
-	;
-}
-my %scache;
-sub compile-component(Mu:U $component) {
-	my $name = $component.^name;
-	.return with %scache{$name};
-	my $ast := $component.&parse;
-	my Str $code = $ast.&compile: |(:macro if $component.HOW.?is-macro: $component);
-	%scache{$name} = $code;
-	$code
-}
-my %cache;
-sub comp($code, $name) {
-	sub {
-		%cache{$name} //= $code.EVAL;
-	}
-}
-#]
 
 use Cro::HTTP::Router;
 
@@ -110,32 +17,26 @@ role Component {
 	my $name = ::?CLASS.^name;
 	::?CLASS.HOW does my role ExportMethod {
 		method add-component-routes(
-			$component    is copy,
-			:&load        is copy,
+			$component is copy,
+			:&load is copy,
 			:delete(&del) is copy,
-			:&create      is copy,
-			:&update      is copy,
+			:&create is copy,
+			:&update is copy,
 			:$url-part = $component.^name.split('::').tail.lc,
-			:$macro    = $component.HOW.?is-macro($component) // False,
 		) is export {
 			my $cmp-name = $component.^name;
-#			use Cro::HTTP::Router;
+
 			without $*CRO-ROUTE-SET {
 				die "Components should be added from inside a `route {}` block"
 			}
 			my $route-set := $*CRO-ROUTE-SET;
 
-			&load   //= -> $id         { $component.LOAD: $id      } if $component.^can: "LOAD";
+			&load   //= -> $id         { $component.LOAD: $id } if $component.^can: "LOAD";
 			&create //= -> *%pars      { $component.CREATE: |%pars } if $component.^can: "CREATE";
-			&del    //= -> $id         { load($id).DELETE          } if $component.^can: "DELETE";
-			&update //= -> $id, *%pars { load($id).UPDATE: |%pars  } if $component.^can: "UPDATE";
+			&del    //= -> $id         { load($id).DELETE } if $component.^can: "DELETE";
+			&update //= -> $id, *%pars { load($id).UPDATE: |%pars } if $component.^can: "UPDATE";
 
 			with &load {
-				my &LOAD = -> $id {
-					my $obj = load $id;
-					die "Component '$cmp-name' could not be loaded with id '$id'" without $obj;
-					$obj
-				}
 				with &create {
 					note "adding POST $url-part";
 					post -> Str $ where $url-part {
@@ -148,13 +49,8 @@ role Component {
 
 				note "adding GET $url-part/<id>";
 				get -> Str $ where $url-part, $id {
-					my $tag = $component.^name;
-					my $comp = LOAD $id;
-					if $component.^can: "RESPOND" {
-						respond $comp
-					} else {
-						content 'text/html', $comp.Str
-					}
+					my $comp = load $id;
+					respond $comp
 				}
 
 				with &del {
@@ -174,80 +70,40 @@ role Component {
 					}
 				}
 
-				for $component.^methods.grep(*.?is-accessible) -> $meth {
-					my $name = $meth.is-accessible-name;
+				for $component.^methods.grep(*.?is-routable) -> $meth {
+					my $name = $meth.is-routable-name;
 
 					if $meth.signature.params > 2 {
 						note "adding PUT $url-part/<id>/$name";
 						put -> Str $ where $url-part, $id, Str $name {
 							request-body -> $data {
-								LOAD($id)."$name"(|$data.pairs.Map);
+								load($id)."$name"(|$data.pairs.Map);
 								redirect "../{ $id }", :see-other unless $component.^can: "RESPOND"
 							}
 						}
 					} else {
 						note "adding GET $url-part/<id>/$name";
 						get -> Str $ where $url-part, $id, Str $name {
-							LOAD($id)."$name"();
+							load($id)."$name"();
 							redirect "../{ $id }", :see-other unless $component.^can: "RESPOND"
 						}
 					}
 				}
 			}
 		}
-		#`[
-		method exports( Mu:U $class --> Map() ) {
-			if $class.^can: "RENDER" {
-				my Str $compiled = $class.&compile-component;
-				my $name = $class.^name;
-				my &compiled = comp $compiled, $name;
-				do if $class.HOW.?is-macro: $class {
-					Map.new: (
-						'&__TEMPLATE_MACRO__' ~ $name => sub (&body, |c) {
-							compiled.(&body, $class.new: |c)
-						}
-					)
-				} else {
-					Map.new: (
-						'&__TEMPLATE_SUB__' ~ $name => sub (|c) {
-							compiled.($class.new(|c))
-						}
-					)
-				}
-			}
-		}
-		#]
 	}
-	#`[
-	::?CLASS.^add_method: "Str", my method (|c) {
-		my Str $compiled = self.WHAT.&compile-component;
-		my $name = self.^name;
-		my &compiled = comp $compiled, $name;
-		my %*WARNINGS;
-		use Cro::WebApp::Template::Repository;
-		my $*TEMPLATE-REPOSITORY = get-template-repository;
-
-		my $resp = compiled.(self,|c);
-
-		if %*WARNINGS {
-			for %*WARNINGS.kv -> $text, $number {
-				warn "$text ($number time{ $number == 1 ?? '' !! 's' })";
-			}
-		}
-		$resp
-	}
-	#]
 }
 
 sub respond($comp) is export {
 	content 'text/html', $comp.RESPOND
 }
 
+
 =begin pod
 
 =head1 NAME
 
-Component - A way create web components with cro templates
+Component - A way create web components without cro templates
 
 =head1 SYNOPSIS
 
@@ -313,130 +169,13 @@ On your template:
 
 =end item
 
-=begin item
-
-As a value passed as data to the template.
-If a Component is passed as a value to a template, you can simply "print" it inside the template
-to have its rendered version, it will probably be an HTML, so it will need to be called inside
-a <&HTML()> call (I'm still trying to figureout how to avoid that requirement).
-
-Ex:
-
-=begin code :lang<raku>
-use Component;
-
-class Todo does Component {
-	has Str  $.text is required;
-	has Bool &.done = False;
-
-	method RENDER {
-		Q:to/END/
-		<tr>
-			<td>
-				<input type='checkbox' <?.done>checked</?>>
-			</td>
-			<td>
-				<.text>
-			</td>
-		</tr>
-		END
-	}
-}
-
-sub EXPORT { Todo.^exports }
-
-=end code
-
-On your route:
-
-=begin code :lang<raku>
-
-template "todos.crotmp", { :todos(<bla ble bli>.map: -> $text { Todo.new: :$text }) }
-
-=end code
-
-On your template:
-
-=begin code :lang<crotmp>
-<@.todos: $todo>
-	<&HTML($todo)>
-</@>
-
-=end code
-
-=end item
-
-=begin item
-
-You can also use a Component to auto-generate cro routes
-
-Ex:
-
-=begin code :lang<raku>
-use Component;
-
-class Text does Component {
-	my UInt $next-id = 1;
-	my %texts;
-
-	has UInt $.id      = $next-id++;
-	has Str  $.text is required;
-	has Bool $.deleted = False;
-
-	method TWEAK(|) { %tests{$!id} = self }
-
-	method LOAD($id) { %tests{$id} }
-
-	method all { %texts.values }
-
-	method toggle is accessoble {
-		$!deleted = !$!deleted
-	}
-
-	method RENDER {
-		Q:to/END/
-		<?.deleted><del><.text></del></?>
-		<!><.text></!>
-		END
-	}
-}
-
-sub EXPORT { Todo.^exports }
-
-=end code
-
-On your route:
-
-=begin code :lang<raku>
-
-use Text;
-route {
-	Text.^add-component-routes;
-
-	get -> {
-		template "texts.crotmp", { :texts[ Texts.all ] }
-	}
-}
-
-=end code
-
-The call to the .^add-component-routes method will create (on this case) 2 endpoints:
-
-=item C</text/<id>> -- that will return the HTML ot the obj with that id rendered (it will use the method C<LOAD> to get the object)
-
-=item C</text/<id>/toggle> -- that will load the object using the method C<LOAD> and call C<toggle> on it
-
-You can also define the method C<CREATE>, C<DELETE>, and C<UPDATE> to allow it to create other endpoints.
-
-=end item
-
 =head1 AUTHOR
 
-Fernando Corrêa de Oliveira <fco@cpan.com>
+Steve Roe <librasteve@furnival.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2024 Fernando Corrêa de Oliveira
+Copyright 2025 Steve Roe
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
