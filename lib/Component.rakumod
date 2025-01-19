@@ -16,7 +16,7 @@ use Cro::HTTP::Router;
 role Component {
 	my $name = ::?CLASS.^name;
 	::?CLASS.HOW does my role ExportMethod {
-		method add-component-routes(
+		method add-routes(
 			$component is copy,
 			:&load is copy,
 			:delete(&del) is copy,
@@ -24,17 +24,14 @@ role Component {
 			:&update is copy,
 			:$url-part = $component.^name.split('::').tail.lc,
 		) is export {
-			my $cmp-name = $component.^name;
 
-			without $*CRO-ROUTE-SET {
-				die "Components should be added from inside a `route {}` block"
-			}
-			my $route-set := $*CRO-ROUTE-SET;
+			my $route-set := $*CRO-ROUTE-SET
+					or die "Components should be added from inside a `route {}` block";
 
-			&load   //= -> $id         { $component.LOAD: $id } if $component.^can: "LOAD";
+			&load   //= -> $id         { $component.LOAD: $id }      if $component.^can: "LOAD";
 			&create //= -> *%pars      { $component.CREATE: |%pars } if $component.^can: "CREATE";
-			&del    //= -> $id         { load($id).DELETE } if $component.^can: "DELETE";
-			&update //= -> $id, *%pars { load($id).UPDATE: |%pars } if $component.^can: "UPDATE";
+			&del    //= -> $id         { load($id).DELETE }          if $component.^can: "DELETE";
+			&update //= -> $id, *%pars { load($id).UPDATE: |%pars }  if $component.^can: "UPDATE";
 
 			with &load {
 				with &create {

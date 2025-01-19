@@ -31,17 +31,16 @@ Person.^populate;
 class SearchBox {
 	has $.title;
 	has $.url-path;
-	has $.indi-img  = '/img/bars.svg';
-	has $.indi-text = '  Searching...';
-	has $.placeholder = 'Begin typing to search...';
 
 	method RESPOND { [
 		h3 [
 			$!title,
-			span :class<htmx-indicator>, [img :src($!indi-img); $!indi-text]
+			span :class<htmx-indicator>,
+				[img :src</img/bars.svg>; '  Searching...']
 		];
 
-		input :type<search>, :name<needle>, :$!placeholder,
+		input :type<search>, :name<needle>,
+			:placeholder<Begin typing to search...>,
 			:hx-put($!url-path),
 			:hx-trigger<keyup changed delay:500ms, search>,
 			:hx-target<#search-results>,
@@ -69,20 +68,21 @@ class SearchTable does Component {
 	also does BaseLib::THead;
 
 	my UInt $next-id = 1;
-	my %holder;
+	my SearchTable %holder;
 
 	has $.id = $next-id++;
-	has $.base = '';
-	has $.title = 'Search';
-
-	has SearchBox $.searchbox .= new:
-			:$!title, :url-path("$!base/searchtable/$!id/search");
-
-	has Results $.results .= new;
-
 	submethod TWEAK  { %holder{$!id} = self }
+
 	method LOAD($id) { %holder{$id} }
-	method all { %holder.values }
+	method all { %holder.keys.sort.map: { %holder{$_} } }
+
+	has $.title = 'Search';
+	has $.base;
+	has $!url-path = ($!base ?? "$!base/" !! '') ~ "searchtable/$!id/search";
+
+
+	has SearchBox $.searchbox .= new: :$!title, :$!url-path;
+	has Results   $.results   .= new;
 
 	method search(:$needle) is routable {
 

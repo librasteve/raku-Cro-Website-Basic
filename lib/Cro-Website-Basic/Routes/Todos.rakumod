@@ -2,19 +2,19 @@ use Component;
 
 class Todo does Component {
     my UInt $next = 1;
-    my %holder;
+    my Todo %holder;
 
     has UInt $.id = $next++;
-    has Bool $.done is rw = False;
-    has Str  $.text is required;
-
     submethod TWEAK  { %holder{$!id} = self }
-
-    method all { %holder.values }
 
     method LOAD($id)      { %holder{$id} }
     method CREATE(*%data) { Todo.new: |%data }
     method DELETE         { %holder{$!id}:delete }
+
+    method all { %holder.keys.sort.map: { %holder{$_} } }
+
+    has Bool $.done is rw = False;
+    has Str  $.text is required;
 
     method toggle is routable {
         $!done = ! $!done;
@@ -66,7 +66,7 @@ class Frame {
                     hx-swap="beforeend"
                     hx-on::after-request="this.reset()"
                 >
-                    <input name=data><button type=submit>+</button>
+                    <input name=text><button type=submit>+</button>
                 </form>
             </div>
         END
@@ -74,12 +74,11 @@ class Frame {
 }
 
 use Cro::HTTP::Router;
-#use Cro::WebApp::Template;
 
 sub todos-routes() is export {
     route {
         do for <one two> -> $text { Todo.new: :$text }
-        Todo.^add-component-routes;
+        Todo.^add-routes;
 
         get -> {
             respond Frame.new: todos => Todo.all;

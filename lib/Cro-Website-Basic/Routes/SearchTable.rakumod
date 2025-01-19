@@ -9,7 +9,7 @@ sub searchtable-routes() is export {
     route {
 
         my $base = 'searchtable';
-        SearchTable.^add-component-routes;
+        SearchTable.^add-routes;
 
         get -> {
             content 'text/html',
