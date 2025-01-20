@@ -13,6 +13,9 @@ class Todo does Component {
 
     method all { %holder.keys.sort.map: { %holder{$_} } }
 
+    has $.base;
+    has $!url-path = ($!base ?? "$!base/" !! '') ~ "todo/$!id/toggle";
+
     has Bool $.checked is rw = False;
     has Str  $.text is required;
 
@@ -29,7 +32,7 @@ class Todo does Component {
             input(
                 :type<checkbox>,
                 :$!checked,
-                :hx-get("/todos/todo/$!id/toggle"),
+                :hx-get($!url-path),
                 :hx-target<closest tr>,
                 :hx-swap<outerHTML>,
             )
