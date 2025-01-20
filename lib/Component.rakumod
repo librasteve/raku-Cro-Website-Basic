@@ -19,8 +19,8 @@ role Component {
 		method add-routes(
 			$component is copy,
 			:&load is copy,
-			:delete(&del) is copy,
 			:&create is copy,
+			:delete(&del) is copy,
 			:&update is copy,
 			:$url-part = $component.^name.split('::').tail.lc,
 		) is export {
@@ -75,14 +75,14 @@ role Component {
 						put -> Str $ where $url-part, $id, Str $name {
 							request-body -> $data {
 								load($id)."$name"(|$data.pairs.Map);
-								redirect "../{ $id }", :see-other unless $component.^can: "RESPOND"
+								redirect "../{ $id }", :see-other unless $component.^can: "HTML"
 							}
 						}
 					} else {
 						note "adding GET $url-part/<id>/$name";
 						get -> Str $ where $url-part, $id, Str $name {
 							load($id)."$name"();
-							redirect "../{ $id }", :see-other unless $component.^can: "RESPOND"
+							redirect "../{ $id }", :see-other unless $component.^can: "HTML"
 						}
 					}
 				}
@@ -92,7 +92,7 @@ role Component {
 }
 
 sub respond($comp) is export {
-	content 'text/html', $comp.RESPOND
+	content 'text/html', $comp.HTML
 }
 
 

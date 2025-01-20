@@ -32,7 +32,7 @@ class SearchBox {
 	has $.title;
 	has $.url-path;
 
-	method RESPOND { [
+	method HTML {
 		h3 [
 			$!title,
 			span :class<htmx-indicator>,
@@ -46,13 +46,13 @@ class SearchBox {
 			:hx-target<#search-results>,
 			:hx-swap<outerHTML>,
 			:hx-indicator<.htmx-indicator>;
-	] }
+	}
 }
 
 class Results {
 	has @.data is rw = [];
 
-	method RESPOND {
+	method HTML {
 		tbody :id<search-results>,
 			do for @!data {
 				tr
@@ -72,14 +72,11 @@ class SearchTable does Component {
 
 	has $.id = $next-id++;
 	submethod TWEAK  { %holder{$!id} = self }
-
 	method LOAD($id) { %holder{$id} }
-	method all { %holder.keys.sort.map: { %holder{$_} } }
 
 	has $.title = 'Search';
 	has $.base;
 	has $!url-path = ($!base ?? "$!base/" !! '') ~ "searchtable/$!id/search";
-
 
 	has SearchBox $.searchbox .= new: :$!title, :$!url-path;
 	has Results   $.results   .= new;
@@ -97,9 +94,9 @@ class SearchTable does Component {
 		respond $!results;
 	}
 
-	method RESPOND {
+	method HTML {
 		[
-			$!searchbox.RESPOND;
+			$!searchbox.HTML;
 
 			table :class<striped>, [
 				self.thead;
@@ -119,7 +116,7 @@ my package EXPORT::DEFAULT {
 	for @components -> $name {
 		OUR::{'&' ~ $name.lc} :=
 			sub (*@a, *%h) {
-				::($name).new( |@a, |%h ).RESPOND;
+				::($name).new( |@a, |%h ).HTML;
 			}
 	}
 }

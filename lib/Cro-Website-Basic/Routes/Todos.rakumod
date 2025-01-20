@@ -13,63 +13,61 @@ class Todo does Component {
 
     method all { %holder.keys.sort.map: { %holder{$_} } }
 
-    has Bool $.done is rw = False;
+    has Bool $.checked is rw = False;
     has Str  $.text is required;
 
     method toggle is routable {
-        $!done = ! $!done;
+        $!checked = ! $!checked;
         respond self;
     }
 
-    method RESPOND {
-        qq:to/END/;
-			<tr>
-				<td>
-					<input
-						type=checkbox
-                        { $!done ?? 'checked' !! '' }
-						hx-get="/todos/todo/{ $!id }/toggle"
-						hx-target="closest tr"
-						hx-swap="outerHTML"
-					>
-				</td>
-				<td>
-					 { $!done ?? "<del>{ $!text }</del>" !! $!text }
-				</td>
-				<td>
-					<button
-						hx-delete="/todos/todo/{ $!id }"
-						hx-confirm="Are you sure?"
-						hx-target="closest tr"
-						hx-swap="delete"
-					>
-						-
-					</button>
-				</td>
-			</tr>
-		END
+    method HTML {
+        use HTML::Functional;
+
+        tr(
+          td(
+            input(
+                :type<checkbox>,
+                :$!checked,
+                :hx-get("/todos/todo/$!id/toggle"),
+                :hx-target<closest tr>,
+                :hx-swap<outerHTML>,
+            )
+          ),
+          td(
+              $!checked ?? del($!text) !! $!text
+          ),
+          td(
+              button
+                :type<submit>,
+                :hx-delete("/todos/todo/$!id"),
+                :hx-confirm<Are you sure?>,
+                :hx-target<closest tr>,
+                :hx-swap<delete>,
+                    '-'
+          ),
+        );
     }
 }
 
 class Frame {
     has Todo() @.todos;
 
-    method RESPOND {
-        qq:to/END/;
-            <div>
-                <table>
-                     { @!todos.map: *.RESPOND }
-                </table>
-                <form
-                    hx-post="/todos/todo"
-                    hx-target="table"
-                    hx-swap="beforeend"
-                    hx-on::after-request="this.reset()"
-                >
-                    <input name=text><button type=submit>+</button>
-                </form>
-            </div>
-        END
+    method HTML {
+        use HTML::Functional;
+
+        div [
+            table [@!todos.map: *.HTML];
+            form
+                :hx-post</todos/todo>,
+                :hx-target<table>,
+                :hx-swap<beforeend>,
+                :hx-on:htmx:after-request<this.reset()>, [
+                    input :name<text>;
+                    button :type<submit>, '+';
+                ]
+            ;
+        ]
     }
 }
 
