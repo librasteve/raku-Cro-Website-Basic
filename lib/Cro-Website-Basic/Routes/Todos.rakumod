@@ -5,16 +5,13 @@ class Todo does Component {
     my Todo %holder;
 
     has UInt $.id = $next++;
-    submethod TWEAK  { %holder{$!id} = self }
+    submethod TWEAK { %holder{$!id} = self }
 
     method LOAD($id)      { %holder{$id} }
     method CREATE(*%data) { Todo.new: |%data }
     method DELETE         { %holder{$!id}:delete }
 
     method all { %holder.keys.sort.map: { %holder{$_} } }
-
-    has $.base;
-    has $!url-path = ($!base ?? "$!base/" !! '') ~ "todo/$!id/toggle";
 
     has Bool $.checked is rw = False;
     has Str  $.text is required;
@@ -25,17 +22,17 @@ class Todo does Component {
     }
 
     method HTML {
+
+        my %hx-toggle =
+            :hx-get("todos/todo/$!id/toggle"),
+            :hx-target<closest tr>,
+            :hx-swap<outerHTML>,;
+
         use HTML::Functional;
 
         tr(
           td(
-            input(
-                :type<checkbox>,
-                :$!checked,
-                :hx-get($!url-path),
-                :hx-target<closest tr>,
-                :hx-swap<outerHTML>,
-            )
+            input( :type<checkbox>, :$!checked, |%hx-toggle )
           ),
           td(
               $!checked ?? del($!text) !! $!text
@@ -43,7 +40,7 @@ class Todo does Component {
           td(
               button
                 :type<submit>,
-                :hx-delete("/todos/todo/$!id"),
+                :hx-delete("todos/todo/$!id"),
                 :hx-confirm<Are you sure?>,
                 :hx-target<closest tr>,
                 :hx-swap<delete>,
@@ -62,7 +59,7 @@ class Frame {
         div [
             table [@!todos.map: *.HTML];
             form
-                :hx-post</todos/todo>,
+                :hx-post<todos/todo>,
                 :hx-target<table>,
                 :hx-swap<beforeend>,
                 :hx-on:htmx:after-request<this.reset()>, [
@@ -75,6 +72,8 @@ class Frame {
 }
 
 use Cro::HTTP::Router;
+
+my $base = 'todos';
 
 sub todos-routes() is export {
     route {
