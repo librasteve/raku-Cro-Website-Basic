@@ -28,24 +28,32 @@ Person.^populate;
 # Verify test records were created
 #warn Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", "); $*ERR.flush;
 
-class SearchBox {
+role HxSearchBox {
+	method hx-search-box(--> Hash()) {
+		:hx-put("$.url/$.id/search"),
+		:hx-trigger<keyup changed delay:500ms, search>,
+		:hx-target<#search-results>,
+		:hx-swap<outerHTML>,
+		:hx-indicator<.htmx-indicator>,
+	}
+}
+
+class SearchBox does HxSearchBox {
+	has $.id;
+	has $.url;
 	has $.title;
-	has $.url-path;
 
 	method HTML {
-		h3 [
-			$!title,
-			span :class<htmx-indicator>,
-				[img :src</img/bars.svg>; '  Searching...']
-		];
+		div [
+			h3 [
+				$!title,
+				span :class<htmx-indicator>,
+					[img :src</img/bars.svg>; '  Searching...']
+			];
 
-		input :type<search>, :name<needle>,
-			:placeholder<Begin typing to search...>,
-			:hx-put($!url-path),
-			:hx-trigger<keyup changed delay:500ms, search>,
-			:hx-target<#search-results>,
-			:hx-swap<outerHTML>,
-			:hx-indicator<.htmx-indicator>;
+			input :type<search>, :name<needle>, |$.hx-search-box,
+				  :placeholder<Begin typing to search...>;
+		]
 	}
 }
 
@@ -67,22 +75,15 @@ class Results {
 class SearchTable does Component {
 	also does BaseLib::THead;
 
-	my UInt $next-id = 1;
-	my SearchTable %holder;
+	has Str $.base  = 'searchtable';
+	has Str $.url   = ($!base ?? "$!base/" !! '') ~ self.^name.lc;
 
-	has $.id = $next-id++;
-	submethod TWEAK  { %holder{$!id} = self }
-	method LOAD($id) { %holder{$id} }
+	has Str $.title = 'Search';
 
-	has $.title = 'Search';
-	has $.base;
-	has $!url-path = ($!base ?? "$!base/" !! '') ~ "searchtable/$!id/search";
-
-	has SearchBox $.searchbox .= new: :$!title, :$!url-path;
+	has SearchBox $.searchbox .= new: :$!id, :$!url, :$!title;
 	has Results   $.results   .= new;
 
 	method search(:$needle) is routable {
-
 		sub check($_) { .fc.contains($needle.fc) }
 
 		$!results.data = Person.^all.grep: {

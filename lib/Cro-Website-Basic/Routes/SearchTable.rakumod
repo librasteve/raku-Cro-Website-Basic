@@ -7,14 +7,14 @@ use HTML::Functional :CRO;
 
 sub searchtable-routes() is export {
     route {
-
-        my $base = 'searchtable';
         SearchTable.^add-routes;
 
         get -> {
             content 'text/html',
                 div [
-                    searchtable :thead<First Last Email>, :title("Search People"), :$base, :id(0);
+                    searchtable :id(0), :base<searchtable>,
+                        :title("Search People"),
+                        :thead<First Last Email>;
                 ]
             ;
         }

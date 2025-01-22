@@ -14,7 +14,26 @@ multi trait_mod:<is>(Method $m, :$routable! (:$name = $m.name)) is export {
 use Cro::HTTP::Router;
 
 role Component {
-	my $name = ::?CLASS.^name;
+
+	# ID & Holder Setup
+	my  UInt $next = 1;
+	has UInt $.id;
+
+	my %holder;
+	method holder { %holder }
+
+	submethod TWEAK {
+		$!id //= $next++;
+		%holder{$!id} = self;
+	}
+
+	# Default Actions
+	method LOAD($id)      { $.holder{$id} }
+	method CREATE(*%data) { ::?CLASS.new: |%data }
+	method DELETE         { $.holder{$!id}:delete }
+	method all { $.holder.keys.sort.map: { $.holder{$_} } }
+
+	# Method Routes
 	::?CLASS.HOW does my role ExportMethod {
 		method add-routes(
 			$component is copy,
