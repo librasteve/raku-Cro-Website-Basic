@@ -23,7 +23,6 @@ role HxTodo {
 }
 
 class Todo does HxTodo does Component {
-
     has Str  $.base = 'todos';
     has Str  $.url  = ($!base ?? "$!base/" !! '') ~ self.^name.lc;
 
