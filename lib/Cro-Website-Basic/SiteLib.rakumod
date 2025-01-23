@@ -76,11 +76,9 @@ class SearchTable does Component {
 	also does BaseLib::THead;
 
 	has Str $.base  = 'searchtable';
-	has Str $.url   = ($!base ?? "$!base/" !! '') ~ self.^name.lc;
-
 	has Str $.title = 'Search';
 
-	has SearchBox $.searchbox .= new: :$!id, :$!url, :$!title;
+	has SearchBox $.searchbox .= new: :$!id, :url(self.url), :$!title;
 	has Results   $.results   .= new;
 
 	method search(:$needle) is routable {

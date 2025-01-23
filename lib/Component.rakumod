@@ -15,7 +15,7 @@ use Cro::HTTP::Router;
 
 role Component {
 
-	# ID & Holder Setup
+	# ID, Holder & URL Setup
 	my  UInt $next = 1;
 	has UInt $.id;
 
@@ -26,6 +26,8 @@ role Component {
 		$!id //= $next++;
 		%holder{$!id} = self;
 	}
+
+	method url { (self.base ?? "{self.base}/" !! '') ~ self.^name.lc }
 
 	# Default Actions
 	method LOAD($id)      { $.holder{$id} }

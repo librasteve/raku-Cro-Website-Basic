@@ -24,7 +24,6 @@ role HxTodo {
 
 class Todo does HxTodo does Component {
     has Str  $.base = 'todos';
-    has Str  $.url  = ($!base ?? "$!base/" !! '') ~ self.^name.lc;
 
     has Bool $.checked is rw = False;
     has Str  $.text is required;
