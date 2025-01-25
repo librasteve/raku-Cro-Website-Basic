@@ -10,7 +10,7 @@ role THead {
 
 	method thead( --> Str() ) {
 		thead do for |$!thead -> $cell {
-			th $cell
+			th :scope<col>, $cell
 		}
 	}
 }
@@ -19,8 +19,9 @@ role TFoot {
 	has $.tfoot = [];
 
 	method tfoot( --> Str() ) {
-		tfoot do for |$!tfoot -> $cell {
-			th $cell
+		tfoot do for |$!tfoot.kv -> $i, $cell {
+			if $i==0 { th $cell, :scope<row> }
+			else     { td $cell }
 		}
 	}
 }
@@ -31,17 +32,22 @@ class Table does Component {
 	also does TFoot;
 
 	has $.tbody;
+	has $.striped;
 
 	multi method new(@tbody, *%h) {
 		self.new: :@tbody, |%h;
 	}
 
+	method attrs { :class<striped> if $!striped }
+
 	method HTML {
-		table :border<1>, [
+		table |self.attrs,
+		[
 			self.thead;
 			tbody do for |$!tbody -> @row {
-				tr do for @row -> $cell {
-					td $cell
+				tr do for @row.kv -> $i, $cell {
+					if $i==0 { th $cell, :scope<row> }
+					else     { td $cell }
 				}
 			}
 			self.tfoot;
@@ -49,7 +55,7 @@ class Table does Component {
 	}
 }
 
-#| https://picocss.com/docs/grid
+#| viz. https://picocss.com/docs/grid
 class Grid does Component {
 	has @.items;
 

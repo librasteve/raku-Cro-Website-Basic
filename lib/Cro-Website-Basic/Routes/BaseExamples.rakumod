@@ -4,14 +4,14 @@ use BaseLib;
 use HTML::Functional :CRO;
 
 my $template =
-    h3 'Table',
     div [
+        h3 'Table';
         table $[[1, 2], [3, 4]]  , :thead<Left Right>;
     ],
     hr,
-    h3 'Grid',
     div [
-        grid $(1..6)
+        h3 'Grid';
+        grid $(1..6);
     ],
 ;
 
