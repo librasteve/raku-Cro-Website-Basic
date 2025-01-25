@@ -36,8 +36,11 @@ sub routes() is export {
         use Cro::Website::Basic::Routes::SearchTable;
         include searchtable => searchtable-routes;
 
-        use Cro::Website::Basic::Routes::BaseExamples;   #iamerejh
+        use Cro::Website::Basic::Routes::BaseExamples;
         include baseexamples => baseexamples-routes;
+
+        use Cro::Website::Basic::Routes::PicoTable;
+        include picotable => picotable-routes;
 
         use Cro::Website::Basic::Routes::Todos;
         include todos => todos-routes;

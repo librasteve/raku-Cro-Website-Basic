@@ -27,7 +27,7 @@ role Component {
 		%holder{$!id} = self;
 	}
 
-	method url { (self.base ?? "{self.base}/" !! '') ~ self.^name.lc }
+	method url { do with self.base { "$_/" } ~ self.^name.lc }
 
 	# Default Actions
 	method LOAD($id)      { $.holder{$id} }

@@ -29,6 +29,7 @@
       <ul hx-target="#content">
         <li><a hx-get="/searchtable">searchtable</a></li>
         <li><a hx-get="/todos">todos</a></li>
+        <li><a hx-get="/picotable">picotable</a></li>
         <li><a hx-get="/baseexamples">baseexamples</a></li>
         <?.dark-mode>
           <li><a href="/light-mode">

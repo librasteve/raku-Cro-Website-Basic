@@ -24,6 +24,7 @@
         "Cro::Website::Basic::Routes": "lib/Cro-Website-Basic/Routes.rakumod",
         "Cro::Website::Basic::SiteLib": "lib/Cro-Website-Basic/SiteLib.rakumod",
         "Cro::Website::Basic::Routes::BaseExamples": "lib/Cro-Website-Basic/Routes/BaseExamples.rakumod",
+        "Cro::Website::Basic::Routes::PicoTable": "lib/Cro-Website-Basic/Routes/picotable.rakumod",
         "Cro::Website::Basic::Routes::SearchTable": "lib/Cro-Website-Basic/Routes/SearchTable.rakumod",
         "Cro::Website::Basic::Routes::Todos": "lib/Cro-Website-Basic/Routes/Todos.rakumod"
     },

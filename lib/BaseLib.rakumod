@@ -1,51 +1,64 @@
 unit module BaseLib;
 
 use HTML::Functional;
+use Component;
 
 my @components = <Table Grid>;
-#warn self.thead.raku; $*ERR.flush;
 
-role THead is export {
-	has @.thead;
+role THead {
+	has $.thead = [];
 
 	method thead( --> Str() ) {
-		thead do for @!thead -> $cell {
+		thead do for |$!thead -> $cell {
 			th $cell
 		}
 	}
 }
 
-#| https://picocss.com/docs/table TODO
-class Table does THead is export {
-	has @.data;
+role TFoot {
+	has $.tfoot = [];
 
-	multi method new(@data, *%h) {
-		$.new: :@data, |%h
+	method tfoot( --> Str() ) {
+		tfoot do for |$!tfoot -> $cell {
+			th $cell
+		}
+	}
+}
+
+#| viz. https://picocss.com/docs/table
+class Table does Component {
+	also does THead;
+	also does TFoot;
+
+	has $.tbody;
+
+	multi method new(@tbody, *%h) {
+		self.new: :@tbody, |%h;
 	}
 
-	method render {
+	method HTML {
 		table :border<1>, [
 			self.thead;
-			tbody do for @!data -> @row {
+			tbody do for |$!tbody -> @row {
 				tr do for @row -> $cell {
 					td $cell
 				}
 			}
+			self.tfoot;
 		];
 	}
 }
 
 #| https://picocss.com/docs/grid
-class Grid is export {
+class Grid does Component {
 	has @.items;
 
 	multi method new(@items, *%h) {
-		$.new: :@items, |%h
+		self.new: :@items, |%h;
 	}
 
 	#| example of optional grid style from
 	#| https://cssgrid-generator.netlify.app/
-	# FIXME maybe functional?
 	method style {
 		q:to/END/
 		<style>
@@ -60,7 +73,7 @@ class Grid is export {
 		END
 	}
 
-	method render {
+	method HTML {
 #		$.style ~
 		div :class<grid>,
 			do for @!items -> $item {
@@ -82,7 +95,7 @@ my package EXPORT::DEFAULT {
 
 		OUR::{'&' ~ $name.lc} :=
 			sub (*@a, *%h) {
-				::($name).new( |@a, |%h ).render;
+				::($name).new( |@a, |%h ).HTML;
 			}
 	}
 }
