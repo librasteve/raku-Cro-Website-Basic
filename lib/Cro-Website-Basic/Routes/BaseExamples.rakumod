@@ -3,10 +3,10 @@ use BaseLib;
 
 use HTML::Functional :CRO;
 
-my $template =
+my $html =
     div [
         h3 'Table';
-        table $[[1, 2], [3, 4]]  , :thead<Left Right>;
+        table $[[1, 2], [3, 4]], :thead<Left Right>;
     ],
     hr,
     div [
@@ -22,7 +22,7 @@ sub baseexamples-routes() is export {
 
     route {
         get -> {
-            content 'text/html', $template;
+            content 'text/html', $html;
         }
     }
 }

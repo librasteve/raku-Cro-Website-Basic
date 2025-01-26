@@ -17,7 +17,7 @@ my %data =
 my $html =
     div [
         h3 'Table';
-        table |%data, :striped;
+        table |%data, :class<striped>;
     ]
 ;
 

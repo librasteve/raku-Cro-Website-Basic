@@ -31,17 +31,15 @@ class Table does Component {
 	also does THead;
 	also does TFoot;
 
-	has $.tbody;
-	has $.striped;
+	has $.tbody = [];
+	has $.class;
 
 	multi method new(@tbody, *%h) {
 		self.new: :@tbody, |%h;
 	}
 
-	method attrs { :class<striped> if $!striped }
-
 	method HTML {
-		table |self.attrs,
+		table |%(:$!class if $!class),
 		[
 			self.thead;
 			tbody do for |$!tbody -> @row {

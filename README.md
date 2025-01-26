@@ -19,8 +19,11 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 
 # TODOs
 - [x] do the full pico table example
+- [ ] generic (pico) class former
+  - <button class="secondary">Secondary</button>
+  - <button class="contrast">Contrast</button>
 - self.^add-routes
-- functional export to Ait
+- functional export to Ait::Component
 - push pico/func up the stack (head, nav and so on)
 - hamburger menu
 - light dark better
