@@ -20,12 +20,14 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 # TODOs
 - [x] do the full pico table example
 - [x] generic (pico) class pattern
-- self.^add-routes
-- functional export to Ait::Component
 - push pico/func up the stack (head, nav and so on)
+  - go find earlier class blocks
 - cro run
+- semantic page
+  - https://stackoverflow.com/questions/21927767/how-do-i-correctly-place-an-aside-tag
 - hamburger menu
 - light dark better
+  - https://www.perplexity.ai/search/please-show-me-how-the-picocss-hYJlJKwaRki4aO44y9J57A
 - language switcher
 - sitemap & robots.txt
 - export BaseLib subset on demand NONE | SOME | ALL
@@ -34,7 +36,6 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
   - An ait (/eɪt/, like eight) or eyot (/aɪ(ə)t, eɪt/) is a small island.
 - do all pico examples https://picocss.com/docs/
 - do all htmx examples
-- todos to library
 - docs maker from Red
 
 # Local

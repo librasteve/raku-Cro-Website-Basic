@@ -102,7 +102,7 @@ class SearchTable does Component {
 			$!searchbox.HTML;
 
 			table :class<striped>, [
-				$.thead;
+				thead $.thead;
 				tbody :id<search-results>;
 			];
 		]
