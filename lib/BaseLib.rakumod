@@ -33,7 +33,7 @@ class Table does Component {
 	method tfoot { tfoot part($!tfoot) }
 
 	method HTML {
-		table |%(:$!class if $!class), [ $.thead; $.tbody; $.tfoot; ];
+		table |%(:$!class if $!class), [$.thead; $.tbody; $.tfoot;];
 	}
 }
 
