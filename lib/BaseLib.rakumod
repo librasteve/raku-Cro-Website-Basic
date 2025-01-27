@@ -19,10 +19,10 @@ class Table does Component {
 	sub part($part, :$head) {
 		do for |$part -> @row {
 			tr do for @row.kv -> $col, $cell {
-				given    	$col, $head  {
-					when   	  *,   *.so  { th $cell, :scope<col> }
-					when   	  0,   *     { th $cell, :scope<row> }
-					default              { td $cell }
+				given    	$col, $head {
+					when   	  *,    *.so  { th $cell, :scope<col> }
+					when   	  0,    *     { th $cell, :scope<row> }
+					default               { td $cell }
 				}
 			}
 		}
