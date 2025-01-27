@@ -6,7 +6,7 @@ use HTML::Functional :CRO;
 my $html =
     div [
         h3 'Table';
-        table $[[1, 2], [3, 4]], :thead<Left Right>;
+        table $[[1, 2], [3, 4]], :thead[<Left Right>,];
     ],
     hr,
     div [

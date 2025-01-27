@@ -1,7 +1,6 @@
 use HTML::Functional;
 
 use Component;
-use BaseLib :NONE;
 
 my @components = <SearchTable>;
 
@@ -73,13 +72,20 @@ class Results {
 }
 
 class SearchTable does Component {
-	also does BaseLib::THead;
-
 	has Str $.base  = 'searchtable';
 	has Str $.title = 'Search';
+	has     $.thead = [];
 
 	has SearchBox $.searchbox .= new: :$!id, :url(self.url), :$!title;
 	has Results   $.results   .= new;
+
+	method thead {
+		do for |$!thead -> @row {
+			tr do for @row.kv -> $col, $cell {
+				th :scope<col>, $cell
+			}
+		}
+	}
 
 	method search(:$needle) is routable {
 		sub check($_) { .fc.contains($needle.fc) }

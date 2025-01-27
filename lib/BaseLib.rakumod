@@ -5,51 +5,35 @@ use Component;
 
 my @components = <Table Grid>;
 
-role THead {
-	has $.thead = [];
-
-	method thead( --> Str() ) {
-		thead do for |$!thead -> $cell {
-			th :scope<col>, $cell
-		}
-	}
-}
-
-role TFoot {
-	has $.tfoot = [];
-
-	method tfoot( --> Str() ) {
-		tfoot do for |$!tfoot.kv -> $i, $cell {
-			if $i==0 { th $cell, :scope<row> }
-			else     { td $cell }
-		}
-	}
-}
-
 #| viz. https://picocss.com/docs/table
 class Table does Component {
-	also does THead;
-	also does TFoot;
-
 	has $.tbody = [];
+	has $.thead = [];
+	has $.tfoot = [];
 	has $.class;
 
 	multi method new(@tbody, *%h) {
 		self.new: :@tbody, |%h;
 	}
 
-	method HTML {
-		table |%(:$!class if $!class),
-		[
-			self.thead;
-			tbody do for |$!tbody -> @row {
-				tr do for @row.kv -> $i, $cell {
-					if $i==0 { th $cell, :scope<row> }
-					else     { td $cell }
+	sub part($part, :$head) {
+		do for |$part -> @row {
+			tr do for @row.kv -> $col, $cell {
+				given    $col, $head {
+					when   *, *.so { th $cell, :scope<col> }
+					when   0, * { th $cell, :scope<row> }
+					default { td $cell }
 				}
 			}
-			self.tfoot;
-		];
+		}
+	}
+
+	method thead { thead part($!thead, :head) }
+	method tbody { tbody part($!tbody) }
+	method tfoot { tfoot part($!tfoot) }
+
+	method HTML {
+		table |%(:$!class if $!class), [ $.thead; $.tbody; $.tfoot; ];
 	}
 }
 
