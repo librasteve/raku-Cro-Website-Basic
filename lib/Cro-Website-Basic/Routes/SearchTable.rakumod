@@ -14,7 +14,7 @@ sub searchtable-routes() is export {
                 div [
                     searchtable :id(0), :base<searchtable>,
                         :title("Search People"),
-                        :thead[<First Last Email>,];
+                        :thead<First Last Email>;
                 ]
             ;
         }

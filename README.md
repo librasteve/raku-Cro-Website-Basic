@@ -19,17 +19,16 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 
 # TODOs
 - [x] do the full pico table example
-- [ ] generic (pico) class former
-  - <button class="secondary">Secondary</button>
-  - <button class="contrast">Contrast</button>
+- [x] generic (pico) class pattern
 - self.^add-routes
 - functional export to Ait::Component
 - push pico/func up the stack (head, nav and so on)
+- cro run
 - hamburger menu
 - light dark better
 - language switcher
 - sitemap & robots.txt
-- export BaseLib subset on demand None | SOME | ALL
+- export BaseLib subset on demand NONE | SOME | ALL
 - names to Ait & HARC stack (HTMX, Ait, Raku, Cro) 
   - https://en.wikipedia.org/wiki/Ait
   - An ait (/eɪt/, like eight) or eyot (/aɪ(ə)t, eɪt/) is a small island.

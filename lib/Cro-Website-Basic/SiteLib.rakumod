@@ -80,10 +80,8 @@ class SearchTable does Component {
 	has Results   $.results   .= new;
 
 	method thead {
-		do for |$!thead -> @row {
-			tr do for @row.kv -> $col, $cell {
-				th :scope<col>, $cell
-			}
+		tr do for |$!thead -> $cell {
+			th :scope<col>, $cell
 		}
 	}
 
@@ -104,7 +102,7 @@ class SearchTable does Component {
 			$!searchbox.HTML;
 
 			table :class<striped>, [
-				self.thead;
+				$.thead;
 				tbody :id<search-results>;
 			];
 		]
