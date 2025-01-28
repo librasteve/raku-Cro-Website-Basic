@@ -31,6 +31,7 @@
         <li><a hx-get="/todos">todos</a></li>
         <li><a hx-get="/picotable">picotable</a></li>
         <li><a hx-get="/baseexamples">baseexamples</a></li>
+        <li><a hx-get="/click_to_edit">click2edit</a></li>
         <?.dark-mode>
           <li><a href="/light-mode">
             <i class="fas fa-sun"></i>

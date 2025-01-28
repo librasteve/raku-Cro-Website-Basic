@@ -26,7 +26,8 @@
         "Cro::Website::Basic::Routes::BaseExamples": "lib/Cro-Website-Basic/Routes/BaseExamples.rakumod",
         "Cro::Website::Basic::Routes::PicoTable": "lib/Cro-Website-Basic/Routes/picotable.rakumod",
         "Cro::Website::Basic::Routes::SearchTable": "lib/Cro-Website-Basic/Routes/SearchTable.rakumod",
-        "Cro::Website::Basic::Routes::Todos": "lib/Cro-Website-Basic/Routes/Todos.rakumod"
+        "Cro::Website::Basic::Routes::Todos": "lib/Cro-Website-Basic/Routes/Todos.rakumod",
+        "Cro::Website::Basic::Routes::Click-To-Edit5": "lib/Cro-Website-Basic/Routes/Click-To-Edit5.rakumod"
     },
     "license": "Artistic-2.0",
     "source-url": ""

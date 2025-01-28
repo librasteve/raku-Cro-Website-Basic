@@ -44,5 +44,8 @@ sub routes() is export {
 
         use Cro::Website::Basic::Routes::Todos;
         include todos => todos-routes;
+
+        use Cro::Website::Basic::Routes::Click-To-Edit5;
+        include click_to_edit => click_to_edit-routes;
     }
 }

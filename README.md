@@ -20,11 +20,12 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 # TODOs
 - [x] do the full pico table example
 - [x] generic (pico) class pattern
+- integrate htmoo concepts
 - push pico/func up the stack (head, nav and so on)
-  - go find earlier class blocks
 - cro run
-- semantic page
+- semantic pagen
   - https://stackoverflow.com/questions/21927767/how-do-i-correctly-place-an-aside-tag
+  - picocss.com left nav?
 - hamburger menu
 - light dark better
   - https://www.perplexity.ai/search/please-show-me-how-the-picocss-hYJlJKwaRki4aO44y9J57A
@@ -37,6 +38,19 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 - do all pico examples https://picocss.com/docs/
 - do all htmx examples
 - docs maker from Red
+
+HTMOO Steps
+- synopsis-raoo / HTMOO.rakumod
+    - dunder mifflin
+    - role Tag
+
+- click-to-edit5
+    - hydrate
+    - functional
+
+game plan
+- c2e5 first as SiteLib
+- htmoo next as Component
 
 # Local
 
