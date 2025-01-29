@@ -20,6 +20,7 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 # TODOs
 - [x] do the full pico table example
 - [x] generic (pico) class pattern
+- [x] c2e5 to SiteLib - click-to-edit5 [hydrate, functional]
 - integrate htmoo concepts
 - push pico/func up the stack (head, nav and so on)
 - cro run
@@ -45,13 +46,7 @@ HTMOO Steps
     - dunder mifflin
     - role Tag
 
-- click-to-edit5
-    - hydrate
-    - functional
-
-game plan
-- c2e5 first as SiteLib
-- htmoo next as Component
+    
 
 # Local
 
