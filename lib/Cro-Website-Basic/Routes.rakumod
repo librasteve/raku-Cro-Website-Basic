@@ -42,10 +42,11 @@ sub routes() is export {
         use Cro::Website::Basic::Routes::PicoTable;
         include picotable => picotable-routes;
 
-        use Cro::Website::Basic::Routes::Todos;
-        include todos => todos-routes;
+        # ! FIXME - currently cant make both the following route sets coexist
+#        use Cro::Website::Basic::Routes::Todos;
+#        include todos => todos-routes;
 
-        use Cro::Website::Basic::Routes::Click-To-Edit5;
+        use Cro::Website::Basic::Routes::Click-To-Edit;
         include click_to_edit => click_to_edit-routes;
     }
 }

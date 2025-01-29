@@ -38,6 +38,7 @@ https://chatgpt.com/share/67646547-ee48-8009-8354-0e4ced492f96
 - do all pico examples https://picocss.com/docs/
 - do all htmx examples
 - docs maker from Red
+- Redden all models
 
 HTMOO Steps
 - synopsis-raoo / HTMOO.rakumod

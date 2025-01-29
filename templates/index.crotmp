@@ -24,7 +24,7 @@
   <header class="container"">
     <nav>
       <ul>
-        <li><a class="logo" href="/">HTML::<b>Functional</b></a></li>
+        <li><a class="logo" href="/">Ait::<b>Html</b></a></li>
       </ul>
       <ul hx-target="#content">
         <li><a hx-get="/searchtable">searchtable</a></li>

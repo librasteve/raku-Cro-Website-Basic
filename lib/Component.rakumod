@@ -27,84 +27,76 @@ role Component {
 		%holder{$!id} = self;
 	}
 
-	method url { do with self.base { "$_/" } ~ self.^name.lc }
+	method url-part { ::?CLASS.^name.subst('::','-').lc }
+	method url { do with self.base { "$_/" } ~ self.url-part }
 
 	# Default Actions
 	method LOAD($id)      { $.holder{$id} }
 	method CREATE(*%data) { ::?CLASS.new: |%data }
 	method DELETE         { $.holder{$!id}:delete }
+	method UPDATE(*%data) { self.data = |self.data, |%data }
 	method all { $.holder.keys.sort.map: { $.holder{$_} } }
 
 	# Method Routes
 	::?CLASS.HOW does my role ExportMethod {
 		method add-routes(
 			$component is copy,
-			:&load is copy,
-			:&create is copy,
-			:delete(&del) is copy,
-			:&update is copy,
-			:$url-part = $component.^name.split('::').tail.lc,
+			:$url-part = $component.url-part;
 		) is export {
 
 			my $route-set := $*CRO-ROUTE-SET
 					or die "Components should be added from inside a `route {}` block";
 
-			&load   //= -> $id         { $component.LOAD: $id }      if $component.^can: "LOAD";
-			&create //= -> *%pars      { $component.CREATE: |%pars } if $component.^can: "CREATE";
-			&del    //= -> $id         { load($id).DELETE }          if $component.^can: "DELETE";
-			&update //= -> $id, *%pars { load($id).UPDATE: |%pars }  if $component.^can: "UPDATE";
+			my &load   = -> $id         { $component.LOAD:   $id    };
+			my &create = -> *%pars      { $component.CREATE: |%pars };
+			my &del    = -> $id         { load($id).DELETE          };
+			my &update = -> $id, *%pars { load($id).UPDATE:  |%pars };
 
-			with &load {
-				with &create {
-					note "adding POST $url-part";
-					post -> Str $ where $url-part {
+			note "adding GET $url-part/<id>";
+			get -> Str $ where $url-part, $id {
+				my $comp = load $id;
+				respond $comp
+			}
+
+			note "adding POST $url-part";
+			post -> Str $ where $url-part {
+				request-body -> $data {
+					my $new = create |$data.pairs.Map;
+					redirect "$url-part/{ $new.id }", :see-other
+				}
+			}
+
+			note "adding DELETE $url-part/<id>";
+			delete -> Str $ where $url-part, $id {
+				del $id;
+				content 'text/html', ""
+			}
+
+			note "adding PUT $url-part/<id>";
+			put -> Str $ where $url-part, $id {
+				request-body -> $data {
+					update $id, |$data.pairs.Map;
+					redirect "{ $id }", :see-other   #hmm - this works
+#					redirect "$url-part/{ $id }", :see-other
+				}
+			}
+
+			for $component.^methods.grep(*.?is-routable) -> $meth {
+				my $name = $meth.is-routable-name;
+
+				if $meth.signature.params > 2 {
+					note "adding PUT $url-part/<id>/$name";
+					put -> Str $ where $url-part, $id, Str $name {
 						request-body -> $data {
-							my $new = create |$data.pairs.Map;
-							redirect "$url-part/{ $new.id }", :see-other
+							note $url-part, $id, $name;
+							load($id)."$name"(|$data.pairs.Map);
 						}
 					}
-				}
-
-				note "adding GET $url-part/<id>";
-				get -> Str $ where $url-part, $id {
-					my $comp = load $id;
-					respond $comp
-				}
-
-				with &del {
-					note "adding DELETE $url-part/<id>";
-					delete -> Str $ where $url-part, $id {
-						del $id;
-						content 'text/html', ""
-					}
-				}
-
-				with &update {
-					note "adding PUT $url-part/<id>";
-					put -> Str $ where $url-part, $id {
-						request-body -> $data {
-							update $id, |$data.pairs.Map
-						}
-					}
-				}
-
-				for $component.^methods.grep(*.?is-routable) -> $meth {
-					my $name = $meth.is-routable-name;
-
-					if $meth.signature.params > 2 {
-						note "adding PUT $url-part/<id>/$name";
-						put -> Str $ where $url-part, $id, Str $name {
-							request-body -> $data {
-								load($id)."$name"(|$data.pairs.Map);
-								redirect "../{ $id }", :see-other unless $component.^can: "HTML"
-							}
-						}
-					} else {
-						note "adding GET $url-part/<id>/$name";
-						get -> Str $ where $url-part, $id, Str $name {
-							load($id)."$name"();
-							redirect "../{ $id }", :see-other unless $component.^can: "HTML"
-						}
+				} else {
+					note "adding GET $url-part/<id>/$name";
+					get -> Str $ where $url-part, $id, Str $name {
+						note $url-part, $id, $name;
+						load($id)."$name"();
 					}
 				}
 			}
@@ -112,8 +104,12 @@ role Component {
 	}
 }
 
-sub respond($comp) is export {
+multi sub respond(Any $comp) is export {
 	content 'text/html', $comp.HTML
+}
+
+multi sub respond(Str $html) is export {
+	content 'text/html', $html
 }
 
 

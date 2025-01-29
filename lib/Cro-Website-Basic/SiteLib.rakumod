@@ -56,7 +56,7 @@ class SearchBox does HxSearchBox {
 	}
 }
 
-class Results {
+class Results does Component {
 	has @.data is rw = [];
 
 	method HTML {
