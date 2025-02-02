@@ -7,6 +7,7 @@ my @components = <Table Grid>;
 
 #| viz. https://picocss.com/docs/table
 class Table does Component {
+#class Table does Component does Tag['table', Regular] {   #iamerejh
 	has $.tbody = [];
 	has $.thead = [];
 	has $.tfoot = [];

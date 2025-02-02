@@ -31,11 +31,11 @@ role Component {
 	method url { do with self.base { "$_/" } ~ self.url-part }
 
 	# Default Actions
-	method LOAD($id)      { $.holder{$id} }
+	method LOAD($id)      { self.holder{$id} }
 	method CREATE(*%data) { ::?CLASS.new: |%data }
-	method DELETE         { $.holder{$!id}:delete }
+	method DELETE         { self.holder{$!id}:delete }
 	method UPDATE(*%data) { self.data = |self.data, |%data }
-	method all { $.holder.keys.sort.map: { $.holder{$_} } }
+	method all { self.holder.keys.sort.map: { $.holder{$_} } }
 
 	# Method Routes
 	::?CLASS.HOW does my role ExportMethod {
